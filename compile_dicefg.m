@@ -1,1 +1,1 @@
-mcc -m dicefg.m -N -a ./* -a ./lib/jsonlab/* -a ./algorithms/* -a ./lib/kpc-toolbox/*
+mcc -m dicefg.m -a ./* -a ./lib/jsonlab/* -a ./algorithms/* -a ./lib/kpc-toolbox/aph/* -a ./lib/kpc-toolbox/basic/* -a ./lib/kpc-toolbox/mc/* -a ./lib/kpc-toolbox/map/* -a ./lib/kpc-toolbox/trace/* -a ./lib/kpc-toolbox/contrib/* -a ./lib/kpc-toolbox/kpcfit/* -a ./lib/kpc-toolbox/mmpp/*
