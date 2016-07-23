@@ -1,0 +1,1 @@
+mcc -m dicefg.m -N -a ./* -a ./lib/jsonlab/* -a ./algorithms/* -a ./lib/kpc-toolbox/*
