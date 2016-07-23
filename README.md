@@ -1,7 +1,7 @@
 # DICE Enhancement Tools: FG Module
 ==============
 
-Please check the FG-DICE [wiki](https://github.com/dice-project/DICE-FG/wiki) for installation and user manuals.
+Please check out the [wiki](https://github.com/dice-project/DICE-FG/wiki) for installation and user manuals.
 
 ##License##
 
