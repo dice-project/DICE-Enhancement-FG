@@ -1,7 +1,9 @@
 # DICE Enhancement Tools: FG Module
 ==============
 
-The FG module of the DICE Enhancement Tool is a component to performance estimation and fitting of parameters of UML models annotated with the DICE profile. The tool is released as a linux binary. MATLAB sources are also included with the distribution.
+The FG module of the DICE Enhancement Tool is a component to performance estimation and fitting of parameters of UML models annotated with the DICE profile. 
+
+The tool is released as a linux binary, under the *bin/* folder. MATLAB sources are also included with the distribution.
 
 Please check out the [wiki](https://github.com/dice-project/DICE-Enhancement-FG/wiki) for installation and user manuals.
 
