@@ -8,68 +8,8 @@
         <parameter name='Flags' value='numServers=1, warmUp=0' />
         <parameter name='ResourceDataFile' value='./regression/test1/test-resdata.json' />
         <parameter name='ResourceClassList' value='./regression/test1/test-resclasses.json' />
-        <parameter name='SubsysDataFile' value='./regression/test1/test-graphdata.json' />
-        <parameter name='GraphClassList' value='./regression/test1/test-graphclasses.json' />
-        <parameter name='ResourceList' value='./regression/test1/test-resources.json' />
-        <parameter name='AnalyzeClass' value='class1' />
-        <parameter name='AnalyzeResource' value='resource2' />
-        <parameter name='Confidence' value='mean' />
-        <parameter name='Technology' value='agnostic' />
-        <parameter name='TechnologyInfo' value='' />
-        <parameter name='UMLParam' value='$redT'/>
-        <parameter name='UMLParamType' value='hostDemand'/>
-        <parameter name='UMLInput' value='./regression/test1/model.uml'/>
-        <parameter name='UMLOutput' value='./regression/test1/model.out'/>
-    </metric>
-    <metric>
-        <method>est-ubr</method>
-        <parameter name='startTime' value='1412773199998' />
-        <parameter name='endTime' value='1412776799998' />
-        <parameter name='Flags' value='numServers=1, warmUp=0' />
-        <parameter name='ResourceDataFile' value='./regression/test1/test-resdata.json' />
-        <parameter name='ResourceClassList' value='./regression/test1/test-resclasses.json' />
-        <parameter name='SubsysDataFile' value='./regression/test1/test-graphdata.json' />
-        <parameter name='GraphClassList' value='./regression/test1/test-graphclasses.json' />
-        <parameter name='ResourceList' value='./regression/test1/test-resources.json' />
-        <parameter name='AnalyzeClass' value='class1' />
-        <parameter name='AnalyzeResource' value='resource2' />
-        <parameter name='Confidence' value='mean' />
-        <parameter name='Technology' value='agnostic' />
-        <parameter name='TechnologyInfo' value='' />
-        <parameter name='UMLParam' value='$redT'/>
-        <parameter name='UMLParamType' value='hostDemand'/>
-        <parameter name='UMLInput' value='./regression/test1/model.uml'/>
-        <parameter name='UMLOutput' value='./regression/test1/model.out'/>
-    </metric>
-    <metric>
-        <method>est-qmle</method>
-        <parameter name='startTime' value='1412773199998' />
-        <parameter name='endTime' value='1412776799998' />
-        <parameter name='Flags' value='numServers=1, warmUp=0' />
-        <parameter name='ResourceDataFile' value='./regression/test1/test-resdata.json' />
-        <parameter name='ResourceClassList' value='./regression/test1/test-resclasses.json' />
-        <parameter name='SubsysDataFile' value='./regression/test1/test-graphdata.json' />
-        <parameter name='GraphClassList' value='./regression/test1/test-graphclasses.json' />
-        <parameter name='ResourceList' value='./regression/test1/test-resources.json' />
-        <parameter name='AnalyzeClass' value='class1' />
-        <parameter name='AnalyzeResource' value='resource2' />
-        <parameter name='Confidence' value='mean' />
-        <parameter name='Technology' value='agnostic' />
-        <parameter name='TechnologyInfo' value='' />
-        <parameter name='UMLParam' value='$redT'/>
-        <parameter name='UMLParamType' value='hostDemand'/>
-        <parameter name='UMLInput' value='./regression/test1/model.uml'/>
-        <parameter name='UMLOutput' value='./regression/test1/model.out'/>
-    </metric>
-    <metric>
-        <method>est-qbme</method>
-        <parameter name='startTime' value='1412773199998' />
-        <parameter name='endTime' value='1412776799998' />
-        <parameter name='Flags' value='numServers=1, warmUp=0' />
-        <parameter name='ResourceDataFile' value='./regression/test1/test-resdata.json' />
-        <parameter name='ResourceClassList' value='./regression/test1/test-resclasses.json' />
-        <parameter name='SubsysDataFile' value='./regression/test1/test-graphdata.json' />
-        <parameter name='GraphClassList' value='./regression/test1/test-graphclasses.json' />
+        <parameter name='SystemDataFile' value='./regression/test1/test-sysdata.json' />
+        <parameter name='SystemClassList' value='./regression/test1/test-sysclasses.json' />
         <parameter name='ResourceList' value='./regression/test1/test-resources.json' />
         <parameter name='AnalyzeClass' value='class1' />
         <parameter name='AnalyzeResource' value='resource2' />

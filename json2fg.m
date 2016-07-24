@@ -1,8 +1,8 @@
-function [resdata,graphdata,resources,resclasses,graphclasses]=json2fg(folder,prefix)
+function [resdata,sysdata,resources,resclasses,sysclasses]=json2fg(folder,prefix)
 resdataJSON=loadjson(fullfile(folder,sprintf('%s-resdata.json',prefix)));
-graphdataJSON=loadjson(fullfile(folder,sprintf('%s-graphdata.json',prefix)));
+sysdataJSON=loadjson(fullfile(folder,sprintf('%s-sysdata.json',prefix)));
 resclassesJSON=loadjson(fullfile(folder,sprintf('%s-resclasses.json',prefix)));
-graphclassesJSON=loadjson(fullfile(folder,sprintf('%s-graphclasses.json',prefix)));
+sysclassesJSON=loadjson(fullfile(folder,sprintf('%s-sysclasses.json',prefix)));
 resourceJSON=loadjson(fullfile(folder,sprintf('%s-resources.json',prefix)));
 
 resdataJSON=resdataJSON.resdata;
@@ -13,15 +13,15 @@ for j=1:length(resdataJSON)
 end
 resdata=resdata';
 
-graphdataJSON=graphdataJSON.graphdata;
-for j=1:length(graphdataJSON)
-    for i=1:length(graphdataJSON{j})
-        graphdata{i,j}=graphdataJSON{j}{i};
+sysdataJSON=sysdataJSON.sysdata;
+for j=1:length(sysdataJSON)
+    for i=1:length(sysdataJSON{j})
+        sysdata{i,j}=sysdataJSON{j}{i};
     end
 end
-graphdata=graphdata';
+sysdata=sysdata';
 
 resclasses=resclassesJSON.resclasses;
-graphclasses=graphclassesJSON.graphclasses;
+sysclasses=sysclassesJSON.sysclasses;
 resources=resourceJSON.resources;
 end
