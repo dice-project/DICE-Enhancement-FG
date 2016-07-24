@@ -1,11 +1,6 @@
-This file contains the list of various toolbox functions that are not 
-included in the CTF file. An error will be thrown if any of these functions 
- are called at run-time. Some of these functions may be from toolboxes 
-that you are not using in your application. The reason for this is that 
-these toolboxes have overloaded some methods that are called by your code. 
-If you know which toolboxes are being used by your code, you can use the -p 
- flag with the -N flag to list these toolboxes explicitly. This will 
-cause MATLAB Compiler to only look for functions in the specified toolbox 
-directories in addition to the MATLAB directories. Refer to the MCC 
-documentation for more information on this. 
-
+The List of Excluded Files
+Excluded files	 Exclusion Message ID	 Reason For Exclusion	 Exclusion Rule
+/scratch/matlab2016a/toolbox/local/+matlab/+internal/+toolboxes/addInstalledToolboxesToPath.m	MATLAB:Completion:ExcludedBy	Cannot be packaged for use in the target environment MCR. Removed from the parts list by license Compiler.	/scratch/matlab2016a/toolbox/local/[+]matlab/[+]internal/[+]toolboxes/addInstalledToolboxesToPath[.]m
+/scratch/matlab2016a/toolbox/local/+matlab/+internal/+zipAddOns/addInstalledZipAddOnsToPath.m	MATLAB:Completion:ExcludedBy	Cannot be packaged for use in the target environment MCR. Removed from the parts list by license Compiler.	/scratch/matlab2016a/toolbox/local/[+]matlab/[+]internal/[+]zipAddOns/addInstalledZipAddOnsToPath[.]m
+/scratch/matlab2016a/toolbox/local/pathdef.m	MATLAB:Completion:ExcludedBy	Cannot be packaged for use in the target environment MCR. Removed from the parts list by license Compiler.	/scratch/matlab2016a/toolbox/local/pathdef[.]m
+/scratch/matlab2016a/toolbox/matlab/codetools/initdesktoputils.m	MATLAB:Completion:ExcludedBy	Cannot be packaged for use in the target environment MCR. Removed from the parts list by license Compiler.	/scratch/matlab2016a/toolbox/matlab/codetools

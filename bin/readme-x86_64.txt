@@ -2,26 +2,28 @@ MATLAB Compiler
 
 1. Prerequisites for Deployment 
 
-. Verify the MATLAB Compiler Runtime (MCR) is installed and ensure you    
-  have installed version 7.17 (R2012a).   
+. Verify the MATLAB Runtime is installed and ensure you    
+  have installed version 9.0.1 (R2016a).   
 
-. If the MCR is not installed, do following:
+. If the MATLAB Runtime is not installed, do the following:
   (1) enter
   
       >>mcrinstaller
       
-      at MATLAB prompt. This MCR Installer command displays the 
-      location of the MCR Installer.
+      at MATLAB prompt. The MCRINSTALLER command displays the 
+      location of the MATLAB Runtime installer.
 
-  (2) run the MCR Installer.
+  (2) run the MATLAB Runtime installer.
 
-Or download Linux 64bit version of MCR from the MathWorks website:
+Or download the Linux 64-bit version of the MATLAB Runtime for R2016a 
+from the MathWorks Web site by navigating to
 
-   http://www.mathworks.com/products/compiler/
+   http://www.mathworks.com/products/compiler/mcr/index.html
    
    
-For more information about the MCR and the MCR Installer, see 
-“Working With the MCR” in the MATLAB Compiler User’s Guide.    
+For more information about the MATLAB Runtime and the MATLAB Runtime installer, see 
+Package and Distribute in the MATLAB Compiler documentation  
+in the MathWorks Documentation Center.    
 
 
 2. Files to Deploy and Package
@@ -29,56 +31,70 @@ For more information about the MCR and the MCR Installer, see
 Files to package for Standalone 
 ================================
 -dicefg 
--run_dicefg.sh (shell script run to temporarily set environment variables and execute the 
-                application)
+-run_dicefg.sh (shell script for temporarily setting environment variables and executing 
+                the application)
    -to run the shell script, type
    
        ./run_dicefg.sh <mcr_directory> <argument_list>
        
     at Linux or Mac command prompt. <mcr_directory> is the directory 
-    where version 7.17 of MCR is installed or the directory where 
+    where version 9.0.1 of the MATLAB Runtime is installed or the directory where 
     MATLAB is installed on the machine. <argument_list> is all the 
     arguments you want to pass to your application. For example, 
 
-    If you have version 7.17 of MCR installed in 
-    /mathworks/home/application/v717, run the shell script as:
+    If you have version 9.0.1 of the MATLAB Runtime installed in 
+    /mathworks/home/application/v901, run the shell script as:
     
-       ./run_dicefg.sh /mathworks/home/application/v717
+       ./run_dicefg.sh /mathworks/home/application/v901
        
     If you have MATLAB installed in /mathworks/devel/application/matlab, 
     run the shell script as:
     
        ./run_dicefg.sh /mathworks/devel/application/matlab
 -MCRInstaller.zip
-   -include when building component by clicking "Add MCR" link 
-    in deploytool
+   -if end users are unable to download the MATLAB Runtime using the above  
+    link, include it when building your component by clicking 
+    the "Runtime downloaded from web" link in the Deployment Tool
 -This readme file 
 
 3. Definitions
 
 For information on deployment terminology, go to 
-http://www.mathworks.com/help. Select your product and see 
-the Glossary in the User’s Guide.
+http://www.mathworks.com/help. Select MATLAB Compiler >   
+Getting Started > About Application Deployment > 
+Deployment Product Terms in the MathWorks Documentation 
+Center.
 
 
 4. Appendix 
 
 A. Linux x86-64 systems:
-   On the target machine, add the MCR directory to the environment variable 
-   LD_LIBRARY_PATH by issuing the following commands:
+In the following directions, replace MCR_ROOT by the directory where the MATLAB Runtime 
+   is installed on the target machine.
 
-        NOTE: <mcr_root> is the directory where MCR is installed
-              on the target machine.         
+(1) Set the environment variable XAPPLRESDIR to this value:
 
-            setenv LD_LIBRARY_PATH
-                $LD_LIBRARY_PATH:
-                <mcr_root>/v717/runtime/glnxa64:
-                <mcr_root>/v717/bin/glnxa64:
-                <mcr_root>/v717/sys/os/glnxa64:
-                <mcr_root>/v717/sys/java/jre/glnxa64/jre/lib/amd64/native_threads:
-                <mcr_root>/v717/sys/java/jre/glnxa64/jre/lib/amd64/server:
-                <mcr_root>/v717/sys/java/jre/glnxa64/jre/lib/amd64 
-            setenv XAPPLRESDIR <mcr_root>/v717/X11/app-defaults
+    MCR_ROOT/v901/X11/app-defaults
+
+
+(2) If the environment variable LD_LIBRARY_PATH is undefined, set it to the concatenation 
+   of the following strings:
+
+    MCR_ROOT/v901/runtime/glnxa64:
+    MCR_ROOT/v901/bin/glnxa64:
+    MCR_ROOT/v901/sys/os/glnxa64:
+    MCR_ROOT/v901/sys/opengl/lib/glnxa64
+
+    If it is defined, set it to the concatenation of these strings:
+
+    ${LD_LIBRARY_PATH}: 
+    MCR_ROOT/v901/runtime/glnxa64:
+    MCR_ROOT/v901/bin/glnxa64:
+    MCR_ROOT/v901/sys/os/glnxa64:
+    MCR_ROOT/v901/sys/opengl/lib/glnxa64
+
+   For more detail information about setting the MATLAB Runtime paths, see Package and 
+   Distribute in the MATLAB Compiler documentation in the MathWorks Documentation Center.
 
 
      
