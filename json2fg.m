@@ -5,18 +5,20 @@ resclassesJSON=loadjson(fullfile(folder,sprintf('%s-resclasses.json',prefix)));
 sysclassesJSON=loadjson(fullfile(folder,sprintf('%s-sysclasses.json',prefix)));
 resourceJSON=loadjson(fullfile(folder,sprintf('%s-resources.json',prefix)));
 
+resdata={};
 resdataJSON=resdataJSON.resdata;
 for j=1:length(resdataJSON)
     for i=1:length(resdataJSON{j})
-        resdata{i,j}=resdataJSON{j}{i};
+        resdata{i,j}=resdataJSON{j}{i}(:);
     end
 end
 resdata=resdata';
 
+sysdata={};
 sysdataJSON=sysdataJSON.sysdata;
 for j=1:length(sysdataJSON)
     for i=1:length(sysdataJSON{j})
-        sysdata{i,j}=sysdataJSON{j}{i};
+        sysdata{i,j}=sysdataJSON{j}{i}(:);
     end
 end
 sysdata=sysdata';

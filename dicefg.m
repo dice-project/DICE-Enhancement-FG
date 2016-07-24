@@ -51,13 +51,13 @@ while ~isempty(node)
             if strcmpi(fileExt,'.mat')
                 dicefg_disp(1,'Loading resource data (mat format).');
                 loadedCell = load(metric{cur}.ResourceDataFile,'resdata'); metric{cur}.resdata=loadedCell.resdata;
-                loadedCell = load(metric{cur}.SubsysDataFile,'graphdata'); metric{cur}.graphdata=loadedCell.graphdata;
+                loadedCell = load(metric{cur}.SystemDataFile,'sysdata'); metric{cur}.sysdata=loadedCell.sysdata;
                 loadedCell = load(metric{cur}.ResourceClassList,'classes'); metric{cur}.resclasses=loadedCell.resclasses;
                 loadedCell = load(metric{cur}.ResourceList,'resources'); metric{cur}.resources=loadedCell.resources;
             elseif strcmpi(fileExt,'.json')
                 dicefg_disp(1,'Loading resource data (JSON format).');
                 fileName = strrep(fileName,'-resdata','');
-                [metric{cur}.resdata,metric{cur}.graphdata,metric{cur}.resources,metric{cur}.resclasses]=json2fg(filePath,fileName);
+                [metric{cur}.resdata,metric{cur}.sysdata,metric{cur}.resources,metric{cur}.resclasses]=json2fg(filePath,fileName);
             else
                 error('Only .mat data files are supported in the current version.')
                 exit

@@ -1,5 +1,5 @@
-function [resDataDep,graphDataDep] = est_ci_dependencies(metric)
-% [resDataDep,graphDataDep] = EST_CI_DEPENDENCIES(data, resource, class)
+function [resDataDep,sysDataDep] = est_ci_dependencies(metric)
+% [resDataDep,sysDataDep] = EST_CI_DEPENDENCIES(data, resource, class)
 % Returns data dependency matrix for est-ci
 
 resDataDep = zeros(size(metric.resdata));
@@ -12,6 +12,6 @@ for r=1:length(metric.resclasses)
     resDataDep(hash_metric('respT'),hash_data(metric,resourceIdx,r))=1;
 end
 
-graphDataDep = zeros(size(metric.graphdata));
+sysDataDep = zeros(size(metric.sysdata));
 
 end

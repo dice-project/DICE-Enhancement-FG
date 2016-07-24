@@ -1,5 +1,5 @@
-function [resDataDep,graphDataDep] = est_qmem_dependencies(metric)
-% [resDataDep,graphDataDep] = EST_QMEM_DEPENDENCIES(data, resource, class)
+function [resDataDep,sysDataDep] = est_qbmr_dependencies(metric)
+% [resDataDep,sysDataDep] = EST_QMEM_DEPENDENCIES(data, resource, class)
 % Returns data dependency matrix for est-qmem
 
 resDataDep = zeros(size(metric.resdata));
@@ -10,6 +10,6 @@ for r=1:length(metric.resclasses)
 end
 resDataDep(hash_metric('memAvg'),hash_data(metric,resourceIdx,0)) = 1;
 
-graphDataDep = zeros(size(metric.graphdata));
+sysDataDep = zeros(size(metric.sysdata));
 
 end

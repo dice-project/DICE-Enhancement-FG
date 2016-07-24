@@ -7,8 +7,8 @@ try
         case 'est-ci'
             dicefg_disp(1,'Running complete information method (est-ci).');
             flags = dicefg_parseflags(metric);
-            [resDataDep,graphDataDep] = est_ci_dependencies(metric);
-            if ~dicefg_preproc_check_dep(metric,resDataDep,graphDataDep)
+            [resDataDep,sysDataDep] = est_ci_dependencies(metric);
+            if ~dicefg_preproc_check_dep(metric,resDataDep,sysDataDep)
                 error(sprintf('Data dependencies for %s are not satisfied',metric.method));
             end
             arvT={metric.resdata{hash_metric('arvT'),hash_data(metric, metric.resPos, 1:length(metric.resclasses))}};
@@ -18,26 +18,30 @@ try
         case 'est-ubr'
             dicefg_disp(1,'Running utilization-based regression (est-ubr).');
             flags = dicefg_parseflags(metric);
-            [resDataDep,graphDataDep] = est_ubr_dependencies(metric);
-            if ~dicefg_preproc_check_dep(metric,resDataDep,graphDataDep)
+            [resDataDep,sysDataDep] = est_ubr_dependencies(metric);
+            if ~dicefg_preproc_check_dep(metric,resDataDep,sysDataDep)
                 error(sprintf('Data dependencies for %s are not satisfied',metric.method));
             end
             cpuUtil = metric.resdata{hash_metric('util'),hash_data(metric, metric.resPos, 0)};
-            avgTput = cell2mat({metric.resdata{hash_metric('tputAvg'),hash_data(metric, metric.resPos, 1:length(metric.resclasses))}});
+            cpuUtil = cpuUtil(:);
+            cX = {metric.resdata{hash_metric('tputAvg'),hash_data(metric, metric.resPos, 1:length(metric.resclasses))}};
+            avgTput = cell2mat(cX);
             metric.result = est_ubr(cpuUtil,avgTput,flags.numServers,dicefg_disp);
             metric.confint = [metric.result,metric.result]; % confidence intervals not available
         case 'est-qmle'
             dicefg_disp(1,'Running queue-based maximum likelihood estimation (est-qmle).');
-            [resDataDep,graphDataDep] = est_qmle_dependencies(metric);
-            if ~dicefg_preproc_check_dep(metric,resDataDep,graphDataDep)
+            [resDataDep,sysDataDep] = est_qmle_dependencies(metric);
+            if ~dicefg_preproc_check_dep(metric,resDataDep,sysDataDep)
                 error(sprintf('Data dependencies for %s are not satisfied.',metric.method));
             end
-            [metric.result,metric.confint] = est_qmle( metric.resdata, qlSample, nbJobs, thinkTime, data_needed );
+            % estimate number of jobs
+            % estimate think time
+%            [metric.result,metric.confint] = est_qmle( metric.resdata, qlSample, nbJobs, thinkTime, data_needed );
         case 'est-qbmr'
             dicefg_disp(1,'Running queue-based memory regression (est-qmr)');
             flags = dicefg_parseflags(metric);
-            [resDataDep,graphDataDep] = est_qbmr_dependencies(metric);
-            if ~dicefg_preproc_check_dep(metric,resDataDep,graphDataDep)
+            [resDataDep,sysDataDep] = est_qbmr_dependencies(metric);
+            if ~dicefg_preproc_check_dep(metric,resDataDep,sysDataDep)
                 error(sprintf('Data dependencies for %s are not satisfied.',metric.method));
             end
             metric.result = est_qbmr(metric.resdata,flags.numServers,dicefg_disp);

@@ -1,5 +1,5 @@
-function [resDataDep,graphDataDep] = est_ubr_dependencies(metric)
-% [resDataDep,graphDataDep] = EST_UBR_DEPENDENCIES(data, resource, class)
+function [resDataDep,sysDataDep] = est_ubr_dependencies(metric)
+% [resDataDep,sysDataDep] = EST_UBR_DEPENDENCIES(data, resource, class)
 % Returns data dependency matrix for est-ubr
 
 resDataDep = zeros(size(metric.resdata));
@@ -12,6 +12,6 @@ for r=1:length(metric.resclasses)
     resDataDep(hash_metric('tputAvg'),hash_data(metric,resourceIdx,r))=1;
 end
 
-graphDataDep = zeros(size(metric.graphdata));
+sysDataDep = zeros(size(metric.sysdata));
 
 end
