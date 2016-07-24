@@ -3,7 +3,7 @@ function [resDataDep,graphDataDep] = est_qmem_dependencies(metric)
 % Returns data dependency matrix for est-qmem
 
 resDataDep = zeros(size(metric.resdata));
-resourceIdx = find(cellfun(@(x) strcmp(metric.ResourceName,x),metric.resources));
+resourceIdx = find(cellfun(@(x) strcmp(metric.AnalyzeResource,x),metric.resources));
 for r=1:length(metric.resclasses)
     % require average queue-length for each class at each resource, except aggr
     resDataDep(hash_metric('qlenAvg'),hash_data(metric,resourceIdx,r)) = 1;

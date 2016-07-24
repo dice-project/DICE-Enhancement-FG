@@ -10,7 +10,7 @@ try
         expression = sprintf('expr=%s',metric.UMLParam);
         if strfind(metric.method,'est')==1
             if length(metric.result)>1
-                classPos = find(cellfun(@(X)strcmpi(metric.ClassName,X),metric.resclasses));
+                classPos = find(cellfun(@(X)strcmpi(metric.AnalyzeClass,X),metric.resclasses));
                 replace = sprintf('expr=exp(mean=%16f)',metric.result(classPos));
             else
                 replace = sprintf('expr=exp(mean=%16f)',metric.result);

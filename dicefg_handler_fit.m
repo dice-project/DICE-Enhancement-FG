@@ -2,8 +2,8 @@ function metric=dicefg_handler_fit(metric,dicefg_disp)
 t_run = tic;
 dicefg_disp(2,sprintf('Direct fitting from measurement selected (%s).',metric.method));
 supportedMethods = {'fit-erl','fit-exp','fit-gamma','fit-norm','fit-ph2','fit-mmpp2'};
-classPos = find(cellfun(@(X)strcmpi(metric.ClassName,X),metric.resclasses));
-resPos = find(cellfun(@(X)strcmpi(metric.ResourceName,X),metric.resources));
+classPos = find(cellfun(@(X)strcmpi(metric.AnalyzeClass,X),metric.resclasses));
+resPos = find(cellfun(@(X)strcmpi(metric.AnalyzeResource,X),metric.resources));
 try
     metric.method = validatestring(metric.method,supportedMethods);
     switch metric.method

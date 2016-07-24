@@ -45,13 +45,13 @@ while ~isempty(node)
         end
         %% run the analysis for the metric
         try
-            dicefg_disp(1,sprintf('Processing metric %d ("%s" at "%s")',cur,metric{cur}.ClassName,metric{cur}.ResourceName));
+            dicefg_disp(1,sprintf('Processing metric %d ("%s" at "%s")',cur,metric{cur}.AnalyzeClass,metric{cur}.AnalyzeResource));
             %% load data
             [filePath,fileName,fileExt] = fileparts(metric{cur}.ResourceDataFile);
             if strcmpi(fileExt,'.mat')
                 dicefg_disp(1,'Loading resource data (mat format).');
                 loadedCell = load(metric{cur}.ResourceDataFile,'resdata'); metric{cur}.resdata=loadedCell.resdata;
-                loadedCell = load(metric{cur}.GraphDataFile,'graphdata'); metric{cur}.graphdata=loadedCell.graphdata;
+                loadedCell = load(metric{cur}.SubsysDataFile,'graphdata'); metric{cur}.graphdata=loadedCell.graphdata;
                 loadedCell = load(metric{cur}.ResourceClassList,'classes'); metric{cur}.resclasses=loadedCell.resclasses;
                 loadedCell = load(metric{cur}.ResourceList,'resources'); metric{cur}.resources=loadedCell.resources;
             elseif strcmpi(fileExt,'.json')

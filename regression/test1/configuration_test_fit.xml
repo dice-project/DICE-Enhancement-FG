@@ -9,11 +9,11 @@
         <parameter name='Flags' value='numServers=1, warmUp=0' />
         <parameter name='ResourceDataFile' value='./regression/test1/test-resdata.json' />
         <parameter name='ResourceClassList' value='./regression/test1/test-resclasses.json' />
-        <parameter name='GraphDataFile' value='./regression/test1/test-graphdata.json' />
+        <parameter name='SubsysDataFile' value='./regression/test1/test-graphdata.json' />
         <parameter name='GraphClassList' value='./regression/test1/test-graphclasses.json' />
         <parameter name='ResourceList' value='./regression/test1/test-resources.json' />
-        <parameter name='ClassName' value='class1' />
-        <parameter name='ResourceName' value='resource2' />
+        <parameter name='AnalyzeClass' value='class1' />
+        <parameter name='AnalyzeResource' value='resource2' />
         <parameter name='MetricName' value='tputAvg' />
         <parameter name='Confidence' value='mean' />
         <parameter name='Technology' value='agnostic' />
@@ -29,11 +29,11 @@
         <parameter name='Flags' value='numServers=1, warmUp=0' />
         <parameter name='ResourceDataFile' value='./regression/test1/test-resdata.json' />
         <parameter name='ResourceClassList' value='./regression/test1/test-resclasses.json' />
-        <parameter name='GraphDataFile' value='./regression/test1/test-graphdata.json' />
+        <parameter name='SubsysDataFile' value='./regression/test1/test-graphdata.json' />
         <parameter name='GraphClassList' value='./regression/test1/test-graphclasses.json' />
         <parameter name='ResourceList' value='./regression/test1/test-resources.json' />
-        <parameter name='ClassName' value='class1' />
-        <parameter name='ResourceName' value='resource2' />
+        <parameter name='AnalyzeClass' value='class1' />
+        <parameter name='AnalyzeResource' value='resource2' />
         <parameter name='MetricName' value='tputAvg' />
         <parameter name='Confidence' value='mean' />
         <parameter name='Technology' value='agnostic' />
@@ -50,11 +50,11 @@
         <parameter name='Flags' value='numServers=1, warmUp=0' />
         <parameter name='ResourceDataFile' value='./regression/test1/test-resdata.json' />
         <parameter name='ResourceClassList' value='./regression/test1/test-resclasses.json' />
-        <parameter name='GraphDataFile' value='./regression/test1/test-graphdata.json' />
+        <parameter name='SubsysDataFile' value='./regression/test1/test-graphdata.json' />
         <parameter name='GraphClassList' value='./regression/test1/test-graphclasses.json' />
         <parameter name='ResourceList' value='./regression/test1/test-resources.json' />
-        <parameter name='ClassName' value='class1' />
-        <parameter name='ResourceName' value='resource2' />
+        <parameter name='AnalyzeClass' value='class1' />
+        <parameter name='AnalyzeResource' value='resource2' />
         <parameter name='MetricName' value='tputAvg' />
         <parameter name='Confidence' value='mean' />
         <parameter name='Technology' value='agnostic' />
@@ -71,11 +71,11 @@
         <parameter name='Flags' value='numServers=1, warmUp=0' />
         <parameter name='ResourceDataFile' value='./regression/test1/test-resdata.json' />
         <parameter name='ResourceClassList' value='./regression/test1/test-resclasses.json' />
-        <parameter name='GraphDataFile' value='./regression/test1/test-graphdata.json' />
+        <parameter name='SubsysDataFile' value='./regression/test1/test-graphdata.json' />
         <parameter name='GraphClassList' value='./regression/test1/test-graphclasses.json' />
         <parameter name='ResourceList' value='./regression/test1/test-resources.json' />
-        <parameter name='ClassName' value='class1' />
-        <parameter name='ResourceName' value='resource2' />
+        <parameter name='AnalyzeClass' value='class1' />
+        <parameter name='AnalyzeResource' value='resource2' />
         <parameter name='MetricName' value='tputAvg' />
         <parameter name='Confidence' value='mean' />
         <parameter name='Technology' value='agnostic' />
@@ -92,11 +92,11 @@
         <parameter name='Flags' value='numServers=1, warmUp=0' />
         <parameter name='ResourceDataFile' value='./regression/test1/test-resdata.json' />
         <parameter name='ResourceClassList' value='./regression/test1/test-resclasses.json' />
-        <parameter name='GraphDataFile' value='./regression/test1/test-graphdata.json' />
+        <parameter name='SubsysDataFile' value='./regression/test1/test-graphdata.json' />
         <parameter name='GraphClassList' value='./regression/test1/test-graphclasses.json' />
         <parameter name='ResourceList' value='./regression/test1/test-resources.json' />
-        <parameter name='ClassName' value='class1' />
-        <parameter name='ResourceName' value='resource2' />
+        <parameter name='AnalyzeClass' value='class1' />
+        <parameter name='AnalyzeResource' value='resource2' />
         <parameter name='MetricName' value='tputAvg' />
         <parameter name='Confidence' value='mean' />
         <parameter name='Technology' value='agnostic' />
@@ -113,11 +113,11 @@
         <parameter name='Flags' value='numServers=1, warmUp=0' />
         <parameter name='ResourceDataFile' value='./regression/test1/test-resdata.json' />
         <parameter name='ResourceClassList' value='./regression/test1/test-resclasses.json' />
-        <parameter name='GraphDataFile' value='./regression/test1/test-graphdata.json' />
+        <parameter name='SubsysDataFile' value='./regression/test1/test-graphdata.json' />
         <parameter name='GraphClassList' value='./regression/test1/test-graphclasses.json' />
         <parameter name='ResourceList' value='./regression/test1/test-resources.json' />
-        <parameter name='ClassName' value='class1' />
-        <parameter name='ResourceName' value='resource2' />
+        <parameter name='AnalyzeClass' value='class1' />
+        <parameter name='AnalyzeResource' value='resource2' />
         <parameter name='MetricName' value='tputAvg' />
         <parameter name='Confidence' value='mean' />
         <parameter name='Technology' value='agnostic' />
