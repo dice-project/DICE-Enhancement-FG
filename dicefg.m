@@ -63,6 +63,8 @@ while ~isempty(node)
                 exit
             end
             dicefg_disp(1,sprintf('Dataset has %d resources and %d classes.',length(metric{cur}.resources),length(metric{cur}.resclasses)));
+            metric{cur}.('classPos') = find(cellfun(@(X)strcmpi(metric{cur}.AnalyzeClass,X),metric{cur}.resclasses));
+            metric{cur}.('resPos') = find(cellfun(@(X)strcmpi(metric{cur}.AnalyzeResource,X),metric{cur}.resources));
             %% sanitize data
             [nRows,nColumns] = size(metric{cur}.resdata);
             if nColumns ~= (length(metric{cur}.resclasses)+1)*length(metric{cur}.resources)

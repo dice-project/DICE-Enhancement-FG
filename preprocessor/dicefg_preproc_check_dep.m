@@ -1,4 +1,4 @@
-function bool=check_dependencies(metric,resDataDep,graphDataDep)
+function bool=dicefg_preproc_check_dep(metric,resDataDep,graphDataDep)
 bool = true;
 for i = 1:size(resDataDep,1)
     for j = 1:size(resDataDep,2)

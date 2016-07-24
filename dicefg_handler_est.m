@@ -1,8 +1,6 @@
 function metric=dicefg_handler_est(metric,dicefg_disp)
 t_run = tic;
 supportedMethods = {'est-ci','est-ubr','est-qbmr','est-qmle','est-sys-jobs','est-sys-extdelay'};
-classPos = find(cellfun(@(X)strcmpi(metric.AnalyzeClass,X),metric.resclasses));
-resPos = find(cellfun(@(X)strcmpi(metric.AnalyzeResource,X),metric.resources));
 try
     metric.method = validatestring(metric.method,supportedMethods);
     switch metric.method
@@ -13,8 +11,8 @@ try
             if ~dicefg_preproc_check_dep(metric,resDataDep,graphDataDep)
                 error(sprintf('Data dependencies for %s are not satisfied',metric.method));
             end
-            arvT={metric.resdata{hash_metric('arvT'),hash_data(metric, resPos, 1:length(metric.resclasses))}};
-            respT={metric.resdata{hash_metric('respT'),hash_data(metric, resPos, 1:length(metric.resclasses))}};
+            arvT={metric.resdata{hash_metric('arvT'),hash_data(metric, metric.resPos, 1:length(metric.resclasses))}};
+            respT={metric.resdata{hash_metric('respT'),hash_data(metric, metric.resPos, 1:length(metric.resclasses))}};
             metric.result = est_ci(arvT,respT,flags.numServers,flags.warmUp,dicefg_disp);
             metric.confint = [metric.result,metric.result]; % confidence intervals not available
         case 'est-ubr'
@@ -24,8 +22,8 @@ try
             if ~dicefg_preproc_check_dep(metric,resDataDep,graphDataDep)
                 error(sprintf('Data dependencies for %s are not satisfied',metric.method));
             end
-            cpuUtil = metric.resdata{hash_metric('util'),hash_data(metric, resPos, 0)};
-            avgTput = cell2mat({metric.resdata{hash_metric('tputAvg'),hash_data(metric, resPos, 1:length(metric.resclasses))}});
+            cpuUtil = metric.resdata{hash_metric('util'),hash_data(metric, metric.resPos, 0)};
+            avgTput = cell2mat({metric.resdata{hash_metric('tputAvg'),hash_data(metric, metric.resPos, 1:length(metric.resclasses))}});
             metric.result = est_ubr(cpuUtil,avgTput,flags.numServers,dicefg_disp);
             metric.confint = [metric.result,metric.result]; % confidence intervals not available
         case 'est-qmle'
