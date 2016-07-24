@@ -24,14 +24,30 @@ try
             dicefg_disp(1,sprintf('Fitting method selected: PH(2) distribution (%s)',metric.method))
             trace = kpcfit_init(metric.resdata{hash_metric(metric.AnalyzeMetric),hash_data(metric,metric.resPos,metric.classPos)});
             metric.result = kpcfit_auto(trace,'OnlyAC',1,'NumStates',2,'MaxRunsAC',1);
-            metric.result = mmpp2_fit3(map_moment(metric.result,1),map_moment(metric.result,2),map_moment(metric.result,3),0);
+            if map_isfeasible(metric.result)
+                g2 = 0; % acf decay rate - 0 since PH is a renewal process
+                PH2 = mmpp2_fit3(map_moment(metric.result,1),map_moment(metric.result,2),map_moment(metric.result,3),g2);
+                if map_isfeasible(PH2)
+                    metric.result = PH2;
+                end
+            else
+                dicefg_disp(1,'Infeasible PH(2) fitting. Returning exponential.')
+                metric.result = expfit(metric.resdata{hash_metric(metric.AnalyzeMetric),hash_data(metric,metric.resPos,metric.classPos)});
+            end
         case 'fit-mmpp2'
-            dicefg_disp(1,sprintf('Fitting method selected: MMPP(2) distribution (%s)',metric.method))
+            dicefg_disp(1,sprintf('Fitting method selected: MMPP(2) process (%s)',metric.method))
             trace = kpcfit_init(metric.resdata{hash_metric(metric.AnalyzeMetric),hash_data(metric,metric.resPos,metric.classPos)});
             metric.result = kpcfit_auto(trace,'OnlyAC',1,'NumStates',2,'MaxRunsAC',1);
-            g2 = map_acf(metric.result,2)/map_acf(metric.result,1);
-            if ~isfinite(g2) g2=0; end
-%            metric.result = mmpp2_fit3(map_moment(metric.result,1),map_moment(metric.result,2),map_moment(metric.result,3),g2);
+            if map_isfeasible(metric.result)
+                g2 = map_acf(metric.result,2)/map_acf(metric.result,1); % acf decay rate
+                MMPP2 = mmpp2_fit3(map_moment(metric.result,1),map_moment(metric.result,2),map_moment(metric.result,3),g2);
+                if map_isfeasible(MMPP2)
+                    metric.result = MMPP2;
+                end
+            else
+                dicefg_disp(1,'Infeasible MMPP(2) fitting. Returning exponential.')
+                metric.result = expfit(metric.resdata{hash_metric(metric.AnalyzeMetric),hash_data(metric,metric.resPos,metric.classPos)});
+            end
     end
 catch err
     error(sprintf('Unexpected error (%s): %s', metric.method, err.message));
