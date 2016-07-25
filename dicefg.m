@@ -14,7 +14,6 @@ expectednRows = 11; % expected number of rows in data file
 xDoc = xmlread(configFile);
 rootNode = xDoc.getDocumentElement.getChildNodes; % get the <DICE-FG> root
 node = rootNode.getFirstChild;
-cur = 0; % metric counter
 while ~isempty(node)
     if strcmp(node.getNodeName, 'verbose')
         verbose=str2num(node.getTextContent);
@@ -92,43 +91,45 @@ while ~isempty(node)
             error(sprintf('Cannot load resource data file: %s',metric.ResourceDataFile));
             exit
         end
-    elseif strcmp(node.getNodeName, 'metric')
+    elseif strcmp(node.getNodeName,'method')
         metric = setMetricDefaults(metric);
-        subNode = node.getFirstChild;
-        while ~isempty(subNode)
-            %% a single.Method can be run, hence it determines the subNode
-            if strcmpi(subNode.getNodeName, 'method')
-                cur = cur + 1;
-                metric.('Method') = char(subNode.getTextContent);
+        metric.('Method') = char(node.getAttribute('algorithm'));
+        metric.('Flags') = char(node.getAttribute('flags'));
+        subNode0 = node.getFirstChild;
+        while ~isempty(subNode0)
+            if strcmpi(subNode0.getNodeName, 'analysis')
+                subNode = subNode0.getFirstChild;
+                while ~isempty(subNode)
+                    %% read all the custom parameters
+                    if strcmpi(subNode.getNodeName, 'parameter')
+                        metric.(char(subNode.getAttribute('name'))) = char(subNode.getAttribute('value'));
+                    end
+                    subNode = subNode.getNextSibling;
+                end
+                metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.AnalyzeClass,X),metric.ResClassList));
+                metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.AnalyzeResource,X),metric.ResList));
+                
+                %% run the analysis for the metric
+                dicefg_disp(1,sprintf('Processing metric "%s" at "%s"',metric.AnalyzeClass,metric.AnalyzeResource));
+                
+                %% DICE-FG Analyzer
+                if strfind(metric.Method,'est')==1
+                    %% Estimation.Methods
+                    dicefg_disp(2,'Switching to estimation.Method handler.')
+                    metric = dicefg_handler_est(metric, dicefg_disp);
+                elseif strfind(metric.Method,'fit')==1
+                    %% Fitting.Methods
+                    dicefg_disp(2,'Switching to fitting.Method handler.')
+                    metric = dicefg_handler_fit(metric, dicefg_disp);
+                end
+                
+                %% DICE-FG Updater
+                dicefg_disp(2,'Switching to UML update handler.')
+                dicefg_disp(2,sprintf('Saving metric "%s" at "%s"',metric.AnalyzeClass,metric.AnalyzeResource));
+                dicefg_handler_umlupdate(metric, dicefg_disp);
             end
-            %% read all the custom parameters
-            if strcmpi(subNode.getNodeName, 'parameter')
-                metric.(char(subNode.getAttribute('name'))) = char(subNode.getAttribute('value'));
-            end
-            subNode = subNode.getNextSibling;
+            subNode0 = subNode0.getNextSibling;
         end
-        metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.AnalyzeClass,X),metric.ResClassList));
-        metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.AnalyzeResource,X),metric.ResList));
-        %% run the analysis for the metric
-        dicefg_disp(1,sprintf('Processing metric %d ("%s" at "%s")',cur,metric.AnalyzeClass,metric.AnalyzeResource));
-        
-        %% DICE-FG Analyzer
-        if strfind(metric.Method,'est')==1
-            %% Estimation.Methods
-            dicefg_disp(2,'Switching to estimation.Method handler.')
-            metric = dicefg_handler_est(metric, dicefg_disp);
-        elseif strfind(metric.Method,'fit')==1
-            %% Fitting.Methods
-            dicefg_disp(2,'Switching to fitting.Method handler.')
-            metric = dicefg_handler_fit(metric, dicefg_disp);
-        end
-        
-        %% DICE-FG Updater
-        dicefg_disp(2,'Switching to UML update handler.')
-        dicefg_disp(2,sprintf('Saving metric %d ("%s" at "%s")',cur,metric.AnalyzeClass,metric.AnalyzeResource));
-        dicefg_handler_umlupdate(metric, dicefg_disp);
-        
-        dicefg_disp(2,sprintf('Metric %d completed.',cur));
     end
     node = node.getNextSibling;
 end

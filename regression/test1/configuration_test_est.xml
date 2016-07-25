@@ -12,15 +12,24 @@
         <parameter name='Technology' value='agnostic' />
         <parameter name='TechnologyInfo' value='' />
     </dataset>
-    <metric>
-        <method>est-ci</method>
-        <parameter name='Flags' value='numServers=1, warmUp=0' />
-        <parameter name='AnalyzeClass' value='class1' />
-        <parameter name='AnalyzeResource' value='resource2' />
-        <parameter name='Confidence' value='mean' />
-        <parameter name='UMLParam' value='$redT'/>
-        <parameter name='UMLParamType' value='hostDemand'/>
-        <parameter name='UMLInput' value='./regression/test1/model.uml'/>
-        <parameter name='UMLOutput' value='./regression/test1/model.out'/>
-    </metric>
+    <method algorithm='est-ci' flags='numServers=1, warmUp=0' >
+        <analysis>
+            <parameter name='AnalyzeClass' value='class1' />
+            <parameter name='AnalyzeResource' value='resource1' />
+            <parameter name='Confidence' value='mean' />
+            <parameter name='UMLParam' value='$redT'/>
+            <parameter name='UMLParamType' value='hostDemand'/>
+            <parameter name='UMLInput' value='./regression/test1/model.uml'/>
+            <parameter name='UMLOutput' value='./regression/test1/model.out'/>
+        </analysis>
+        <analysis>
+            <parameter name='AnalyzeClass' value='class2' />
+            <parameter name='AnalyzeResource' value='resource1' />
+            <parameter name='Confidence' value='mean' />
+            <parameter name='UMLParam' value='$redT'/>
+            <parameter name='UMLParamType' value='hostDemand'/>
+            <parameter name='UMLInput' value='./regression/test1/model.uml'/>
+            <parameter name='UMLOutput' value='./regression/test1/model.out'/>
+        </analysis>
+    </method>
 </fg>
