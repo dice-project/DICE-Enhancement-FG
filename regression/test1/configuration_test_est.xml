@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DICE-FG>   
     <verbose>1</verbose>
-    <metric>
-        <method>est-ci</method>
-        <parameter name='startTime' value='1412773199998' />
-        <parameter name='endTime' value='1412776799998' />
-        <parameter name='Flags' value='numServers=1, warmUp=0' />
+    <dataset>
+        <parameter name='StartTime' value='1412773199998' />
+        <parameter name='EndTime' value='1412776799998' />        
+        <parameter name='ResourceList' value='./regression/test1/test-resources.json' />
         <parameter name='ResourceDataFile' value='./regression/test1/test-resdata.json' />
         <parameter name='ResourceClassList' value='./regression/test1/test-resclasses.json' />
         <parameter name='SystemDataFile' value='./regression/test1/test-sysdata.json' />
         <parameter name='SystemClassList' value='./regression/test1/test-sysclasses.json' />
-        <parameter name='ResourceList' value='./regression/test1/test-resources.json' />
+    </dataset>
+    <metric>
+        <method>est-ci</method>
+        <parameter name='Flags' value='numServers=1, warmUp=0' />
         <parameter name='AnalyzeClass' value='class1' />
         <parameter name='AnalyzeResource' value='resource2' />
         <parameter name='Confidence' value='mean' />

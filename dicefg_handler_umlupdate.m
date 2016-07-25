@@ -43,9 +43,9 @@ try
                     MAP=metric.Result;
                     [alpha,T]=map2ph(MAP);
                     replace = sprintf('expr=ph2(lambda0=%d,lambda01=%d,lambda1=%d,alpha0=%d)',-T(1,1),T(1,2),-T(2,2),alpha(1));
-                case 'fit-mmpp2'
+                case 'fit-map2'
                     MAP=metric.Result;
-                    replace = sprintf('expr=mmpp2(lambda0=%d,lambda1=%d,sigma0=%d,sigma1=%d)',MAP{2}(1,1),MAP{2}(2,2),MAP{1}(1,2),MAP{1}(2,1));
+                    replace = sprintf('expr=map2(D0_11=%d,D0_12=%d,D0_21=%d,D0_22=%d,D1_11=%d,D1_12=%d,D1_21=%d,D1_22=%d)',MAP{1}(1,1),MAP{1}(1,2),MAP{1}(2,1),MAP{1}(2,2),MAP{2}(1,1),MAP{2}(1,2),MAP{2}(2,1),MAP{2}(2,2));
             end
         end
         f = strrep(f,expression,replace);
