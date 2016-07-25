@@ -5,8 +5,8 @@ function demEst = est_ubr(metric, flags, dicefg_disp)
 % All rights reserved.
 % This code is released under the 3-Clause BSD License.
 
-cpuUtil = metric.ResData{hash_metric('util'),hash_data(metric, metric.resPos, 0)}(:);
-avgTput = cell2mat({metric.ResData{hash_metric('tputAvg'),hash_data(metric, metric.resPos, 1:length(metric.ResClassList))}});
+cpuUtil = metric.ResData{hash_metric('util'),hash_data(metric, metric.ResIndex, 0)}(:);
+avgTput = cell2mat({metric.ResData{hash_metric('tputAvg'),hash_data(metric, metric.ResIndex, 1:length(metric.ResClassList))}});
 nServers = flags.numServers;
 
 nanSet = isnan(cpuUtil);

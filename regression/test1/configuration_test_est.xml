@@ -9,6 +9,8 @@
         <parameter name='ResourceClassList' value='./regression/test1/test-resclasses.json' />
         <parameter name='SystemDataFile' value='./regression/test1/test-sysdata.json' />
         <parameter name='SystemClassList' value='./regression/test1/test-sysclasses.json' />
+        <parameter name='Technology' value='agnostic' />
+        <parameter name='TechnologyInfo' value='' />
     </dataset>
     <metric>
         <method>est-ci</method>
@@ -16,8 +18,6 @@
         <parameter name='AnalyzeClass' value='class1' />
         <parameter name='AnalyzeResource' value='resource2' />
         <parameter name='Confidence' value='mean' />
-        <parameter name='Technology' value='agnostic' />
-        <parameter name='TechnologyInfo' value='' />
         <parameter name='UMLParam' value='$redT'/>
         <parameter name='UMLParamType' value='hostDemand'/>
         <parameter name='UMLInput' value='./regression/test1/model.uml'/>

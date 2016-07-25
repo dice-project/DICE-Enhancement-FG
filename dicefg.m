@@ -2,7 +2,7 @@
 function dicefg(configFile)
 % put a java.opts file in  mcr_root/<ver>/bin/<arch> with -Xmx2096m
 warning off
-version = '2.0.0';
+version = '2.1.0';
 
 % Add subfolders
 %addpath(genpath(pwd));
@@ -70,6 +70,22 @@ while ~isempty(node)
                     end
                 end
             end
+            switch metric.Technology
+                case 'hadoop'
+                    dicefg_disp(2,'Running in technology-specific mode: Apache Hadoop dataset.')
+                    dicefg_disp(1,'Loading Apache Hadoop information.')
+                    % todo
+                case 'spark'
+                    dicefg_disp(2,'Running in technology-specific mode: Apache Spark dataset.')
+                    dicefg_disp(1,'Loading Apache Spark information.')
+                    % todo
+                case 'storm'
+                    dicefg_disp(2,'Running in technology-specific mode: Apache Storm dataset.')
+                    dicefg_disp(1,'Loading Apache Storm information.')
+                    % todo
+                case 'agnostic'
+                    dicefg_disp(2,'Running in technology-agnostic mode.')
+            end
         catch err
             err.message
             error(sprintf('Cannot load resource data file: %s',metric.ResourceDataFile));
@@ -89,26 +105,10 @@ while ~isempty(node)
             end
             subNode = subNode.getNextSibling;
         end
-            metric.('classPos') = find(cellfun(@(X)strcmpi(metric.AnalyzeClass,X),metric.ResClassList));
-            metric.('resPos') = find(cellfun(@(X)strcmpi(metric.AnalyzeResource,X),metric.ResList));
+        metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.AnalyzeClass,X),metric.ResClassList));
+        metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.AnalyzeResource,X),metric.ResList));
         %% run the analysis for the metric
         dicefg_disp(1,sprintf('Processing metric %d ("%s" at "%s")',cur,metric.AnalyzeClass,metric.AnalyzeResource));
-        switch metric.Technology
-            case 'hadoop'
-                dicefg_disp(2,'Running in technology-specific mode: Apache Hadoop dataset.')
-                dicefg_disp(1,'Loading Apache Hadoop information.')
-                % todo
-            case 'spark'
-                dicefg_disp(2,'Running in technology-specific mode: Apache Spark dataset.')
-                dicefg_disp(1,'Loading Apache Spark information.')
-                % todo
-            case 'storm'
-                dicefg_disp(2,'Running in technology-specific mode: Apache Storm dataset.')
-                dicefg_disp(1,'Loading Apache Storm information.')
-                % todo
-            case 'agnostic'
-                dicefg_disp(2,'Running in technology-agnostic mode.')
-        end
         
         %% DICE-FG Analyzer
         if strfind(metric.Method,'est')==1

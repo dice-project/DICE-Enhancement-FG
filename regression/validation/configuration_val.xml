@@ -9,15 +9,16 @@
         <parameter name='ResourceClassList' value='./regression/validation/val-resclasses.json' />
         <parameter name='SystemDataFile' value='./regression/validation/val-sysdata.json' />
         <parameter name='SystemClassList' value='./regression/validation/val-sysclasses.json' />
+        <parameter name='Technology' value='agnostic' />
+        <parameter name='TechnologyInfo' value='' />
     </dataset>
     <metric>
-        <method>est-ci</method>
+        <method>fit-norm</method>
         <parameter name='Flags' value='numServers=1, warmUp=0' />
         <parameter name='AnalyzeClass' value='class1' />
         <parameter name='AnalyzeResource' value='resource1' />
+        <parameter name='AnalyzeMetric' value='qlen' />
         <parameter name='Confidence' value='mean' />
-        <parameter name='Technology' value='agnostic' />
-        <parameter name='TechnologyInfo' value='' />
         <parameter name='UMLParam' value='$redT'/>
         <parameter name='UMLParamType' value='hostDemand'/>
         <parameter name='UMLInput' value='./regression/validation/model.uml'/>
@@ -29,8 +30,6 @@
         <parameter name='AnalyzeClass' value='class1' />
         <parameter name='AnalyzeResource' value='resource1' />
         <parameter name='Confidence' value='mean' />
-        <parameter name='Technology' value='agnostic' />
-        <parameter name='TechnologyInfo' value='' />
         <parameter name='UMLParam' value='$redT'/>
         <parameter name='UMLParamType' value='hostDemand'/>
         <parameter name='UMLInput' value='./regression/validation/model.uml'/>
@@ -42,8 +41,6 @@
         <parameter name='AnalyzeClass' value='class2' />
         <parameter name='AnalyzeResource' value='resource1' />
         <parameter name='Confidence' value='mean' />
-        <parameter name='Technology' value='agnostic' />
-        <parameter name='TechnologyInfo' value='' />
         <parameter name='UMLParam' value='$redT'/>
         <parameter name='UMLParamType' value='hostDemand'/>
         <parameter name='UMLInput' value='./regression/validation/model.uml'/>
@@ -55,8 +52,6 @@
         <parameter name='AnalyzeClass' value='class2' />
         <parameter name='AnalyzeResource' value='resource1' />
         <parameter name='Confidence' value='mean' />
-        <parameter name='Technology' value='agnostic' />
-        <parameter name='TechnologyInfo' value='' />
         <parameter name='UMLParam' value='$redT'/>
         <parameter name='UMLParamType' value='hostDemand'/>
         <parameter name='UMLInput' value='./regression/validation/model.uml'/>
