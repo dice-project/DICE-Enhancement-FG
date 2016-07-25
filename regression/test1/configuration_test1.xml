@@ -2,26 +2,25 @@
 <fg>   
     <verbose>1</verbose>
     <dataset>
-        <parameter name='StartTime' value='1412773199998' />
-        <parameter name='EndTime' value='1412776799998' />        
-        <parameter name='ResourceList' value='./regression/test1/test-resources.json' />
-        <parameter name='ResourceDataFile' value='./regression/test1/test-resdata.json' />
-        <parameter name='ResourceClassList' value='./regression/test1/test-resclasses.json' />
-        <parameter name='SystemDataFile' value='./regression/test1/test-sysdata.json' />
-        <parameter name='SystemClassList' value='./regression/test1/test-sysclasses.json' />
-        <parameter name='Technology' value='agnostic' />
-        <parameter name='TechnologyInfo' value='' />
+        <parameter type='StartTime' value='1412773199998' />
+        <parameter type='EndTime' value='1412776799998' />        
+        <parameter type='ResourceList' value='./regression/test1/test-resources.json' />
+        <parameter type='ResourceDataFile' value='./regression/test1/test-resdata.json' />
+        <parameter type='ResourceClassList' value='./regression/test1/test-resclasses.json' />
+        <parameter type='SystemDataFile' value='./regression/test1/test-sysdata.json' />
+        <parameter type='SystemClassList' value='./regression/test1/test-sysclasses.json' />
+        <parameter type='Technology' value='agnostic' />
+        <parameter type='TechnologyInfo' value='' />
     </dataset>
-    <method algorithm='fit-norm' flags='numServers=1, warmUp=0'>
-        <analysis>
-            <parameter name='AnalyzeClass' value='class1' />
-            <parameter name='AnalyzeResource' value='resource2' />
-            <parameter name='AnalyzeMetric' value='tputAvg' />
-            <parameter name='Confidence' value='mean' />
-            <parameter name='UMLParam' value='$redT'/>
-            <parameter name='UMLParamType' value='hostDemand'/>
-            <parameter name='UMLInput' value='./regression/test1/model.uml'/>
-            <parameter name='UMLOutput' value='./regression/test1/model.out'/>
-        </analysis>
-    </method>
+    <resource value='resource2' algorithm='fit-norm' flags='numServers=1, warmUp=0'>
+        <output>
+            <parameter type='Class' value='class1' />
+            <parameter type='Metric' value='tputAvg' />
+            <parameter type='Confidence' value='mean' />
+            <parameter type='UMLParam' value='$redT'/>
+            <parameter type='UMLParamType' value='hostDemand'/>
+            <parameter type='UMLInput' value='./regression/test1/model.uml'/>
+            <parameter type='UMLOutput' value='./regression/test1/model.out'/>
+        </output>
+    </resource>
 </fg>

@@ -2,59 +2,53 @@
 <fg>   
     <verbose>1</verbose>
     <dataset>
-        <parameter name='StartTime' value='0' />
-        <parameter name='EndTime' value='1492581' />
-        <parameter name='ResourceList' value='./regression/validation/val-resources.json' />
-        <parameter name='ResourceDataFile' value='./regression/validation/val-resdata.json' />
-        <parameter name='ResourceClassList' value='./regression/validation/val-resclasses.json' />
-        <parameter name='SystemDataFile' value='./regression/validation/val-sysdata.json' />
-        <parameter name='SystemClassList' value='./regression/validation/val-sysclasses.json' />
-        <parameter name='Technology' value='agnostic' />
-        <parameter name='TechnologyInfo' value='' />
+        <parameter type='StartTime' value='0' />
+        <parameter type='EndTime' value='1492581' />
+        <parameter type='ResourceList' value='./regression/validation/val-resources.json' />
+        <parameter type='ResourceDataFile' value='./regression/validation/val-resdata.json' />
+        <parameter type='ResourceClassList' value='./regression/validation/val-resclasses.json' />
+        <parameter type='SystemDataFile' value='./regression/validation/val-sysdata.json' />
+        <parameter type='SystemClassList' value='./regression/validation/val-sysclasses.json' />
+        <parameter type='Technology' value='agnostic' />
+        <parameter type='TechnologyInfo' value='' />
     </dataset>
-    <method algorithm='fit-norm' flags='numServers=1, warmUp=0'>
-        <analysis>
-            <parameter name='AnalyzeClass' value='class1' />
-            <parameter name='AnalyzeResource' value='resource1' />
-            <parameter name='AnalyzeMetric' value='qlen' />
-            <parameter name='Confidence' value='mean' />
-            <parameter name='UMLParam' value='$redT'/>
-            <parameter name='UMLParamType' value='hostDemand'/>
-            <parameter name='UMLInput' value='./regression/validation/model.uml'/>
-            <parameter name='UMLOutput' value='./regression/validation/model.out'/>
-        </analysis>
-    </method>
-    <method algorithm='est-ubr' flags='numServers=1, warmUp=0'>
-        <analysis>
-            <parameter name='AnalyzeClass' value='class1' />
-            <parameter name='AnalyzeResource' value='resource1' />
-            <parameter name='Confidence' value='mean' />
-            <parameter name='UMLParam' value='$redT'/>
-            <parameter name='UMLParamType' value='hostDemand'/>
-            <parameter name='UMLInput' value='./regression/validation/model.uml'/>
-            <parameter name='UMLOutput' value='./regression/validation/model.out'/>
-        </analysis>
-    </method>
-    <method algorithm='est-ci' flags='numServers=1, warmUp=0'>
-        <analysis>
-            <parameter name='AnalyzeClass' value='class2' />
-            <parameter name='AnalyzeResource' value='resource1' />
-            <parameter name='Confidence' value='mean' />
-            <parameter name='UMLParam' value='$redT'/>
-            <parameter name='UMLParamType' value='hostDemand'/>
-            <parameter name='UMLInput' value='./regression/validation/model.uml'/>
-            <parameter name='UMLOutput' value='./regression/validation/model.out'/>
-        </analysis>
-    </method>
-    <method algorithm='est-ubr' flags='numServers=1, warmUp=0'>
-        <analysis>
-            <parameter name='AnalyzeClass' value='class2' />
-            <parameter name='AnalyzeResource' value='resource1' />
-            <parameter name='Confidence' value='mean' />
-            <parameter name='UMLParam' value='$redT'/>
-            <parameter name='UMLParamType' value='hostDemand'/>
-            <parameter name='UMLInput' value='./regression/validation/model.uml'/>
-            <parameter name='UMLOutput' value='./regression/validation/model.out'/>
-        </analysis>
-    </method>
+    <resource value='resource1' algorithm='fit-norm' flags='numServers=1, warmUp=0'>
+        <output>
+            <parameter type='Class' value='class1' />
+            <parameter type='Metric' value='qlen' />
+            <parameter type='Confidence' value='mean' />
+            <parameter type='UMLParam' value='$redT'/>
+            <parameter type='UMLParamType' value='hostDemand'/>
+            <parameter type='UMLInput' value='./regression/validation/model.uml'/>
+            <parameter type='UMLOutput' value='./regression/validation/model.out'/>
+        </output>
+    </resource>
+    <resource value='resource1' algorithm='est-ubr' flags='numServers=1, warmUp=0'>
+        <output>
+            <parameter type='Class' value='class1' />
+            <parameter type='Confidence' value='mean' />
+            <parameter type='UMLParam' value='$redT'/>
+            <parameter type='UMLParamType' value='hostDemand'/>
+            <parameter type='UMLInput' value='./regression/validation/model.uml'/>
+            <parameter type='UMLOutput' value='./regression/validation/model.out'/>
+        </output>
+        <output>
+            <parameter type='Class' value='class2' />
+            <parameter type='Confidence' value='mean' />
+            <parameter type='UMLParam' value='$redT'/>
+            <parameter type='UMLParamType' value='hostDemand'/>
+            <parameter type='UMLInput' value='./regression/validation/model.uml'/>
+            <parameter type='UMLOutput' value='./regression/validation/model.out'/>
+        </output>
+    </resource>
+    <resource value='resource1' algorithm='est-ci' flags='numServers=1, warmUp=0'>
+        <output>
+            <parameter type='Class' value='class2' />
+            <parameter type='Confidence' value='mean' />
+            <parameter type='UMLParam' value='$redT'/>
+            <parameter type='UMLParamType' value='hostDemand'/>
+            <parameter type='UMLInput' value='./regression/validation/model.uml'/>
+            <parameter type='UMLOutput' value='./regression/validation/model.out'/>
+        </output>
+    </resource>
 </fg>

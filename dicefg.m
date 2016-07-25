@@ -33,7 +33,7 @@ while ~isempty(node)
         while ~isempty(subNode)
             %% read all the custom parameters
             if strcmpi(subNode.getNodeName, 'parameter')
-                metric.(char(subNode.getAttribute('name'))) = char(subNode.getAttribute('value'));
+                metric.(char(subNode.getAttribute('type'))) = char(subNode.getAttribute('value'));
             end
             subNode = subNode.getNextSibling;
         end
@@ -91,28 +91,29 @@ while ~isempty(node)
             error(sprintf('Cannot load resource data file: %s',metric.ResourceDataFile));
             exit
         end
-    elseif strcmp(node.getNodeName,'method')
+    elseif strcmp(node.getNodeName,'resource')
         metric = setMetricDefaults(metric);
+        metric.('Resource') = char(node.getAttribute('value'));
         metric.('Method') = char(node.getAttribute('algorithm'));
         metric.('Flags') = char(node.getAttribute('flags'));
         subNode0 = node.getFirstChild;
         while ~isempty(subNode0)
-            if strcmpi(subNode0.getNodeName, 'analysis')
+            if strcmpi(subNode0.getNodeName, 'output')
                 subNode = subNode0.getFirstChild;
                 while ~isempty(subNode)
                     %% read all the custom parameters
                     if strcmpi(subNode.getNodeName, 'parameter')
-                        metric.(char(subNode.getAttribute('name'))) = char(subNode.getAttribute('value'));
+                        metric.(char(subNode.getAttribute('type'))) = char(subNode.getAttribute('value'));
                     end
                     subNode = subNode.getNextSibling;
                 end
-                metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.AnalyzeClass,X),metric.ResClassList));
-                metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.AnalyzeResource,X),metric.ResList));
+                metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.Class,X),metric.ResClassList));
+                metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));
                 
                 %% run the analysis for the metric
-                dicefg_disp(1,sprintf('Processing metric "%s" at "%s"',metric.AnalyzeClass,metric.AnalyzeResource));
+                dicefg_disp(1,sprintf('Processing metric "%s" at "%s"',metric.Class,metric.Resource));
                 
-                %% DICE-FG Analyzer
+                %% DICE-FG r
                 if strfind(metric.Method,'est')==1
                     %% Estimation.Methods
                     dicefg_disp(2,'Switching to estimation.Method handler.')
@@ -125,7 +126,7 @@ while ~isempty(node)
                 
                 %% DICE-FG Updater
                 dicefg_disp(2,'Switching to UML update handler.')
-                dicefg_disp(2,sprintf('Saving metric "%s" at "%s"',metric.AnalyzeClass,metric.AnalyzeResource));
+                dicefg_disp(2,sprintf('Saving metric "%s" at "%s"',metric.Class,metric.Resource));
                 dicefg_handler_umlupdate(metric, dicefg_disp);
             end
             subNode0 = subNode0.getNextSibling;
@@ -139,9 +140,9 @@ function metric=setMetricDefaults(metric)
 %% Set default parameters
 metric.('Confidence')='mean';
 metric.('Flags')='';
-metric.('AnalyzeClass')='';
-metric.('AnalyzeResource')='';
-metric.('AnalyzeMetric')='';
+metric.('Class')='';
+metric.('Resource')='';
+metric.('Metric')='';
 metric.('UMLParam')='';
 metric.('UMLParamType')='';
 metric.('UMLInput')='';

@@ -3,7 +3,7 @@ function [resDataDep,sysDataDep] = est_ubr_dependencies(metric)
 % Returns data dependency matrix for est-ubr
 
 resDataDep = zeros(size(metric.ResData));
-resourceIdx = find(cellfun(@(x) strcmp(metric.AnalyzeResource,x),metric.ResList));
+resourceIdx = find(cellfun(@(x) strcmp(metric.Resource,x),metric.ResList));
 
 % require aggregate utilization at resource
 resDataDep(hash_metric('util'),hash_data(metric,resourceIdx,0))=1;
