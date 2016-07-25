@@ -6,6 +6,5 @@ nbJobs = zeros(1,nbClasses);
 
 [~, nbJobs, N0] = analyseData(data, nbJobs, nbClasses, nbNodes, 0);
 
-
 end
 

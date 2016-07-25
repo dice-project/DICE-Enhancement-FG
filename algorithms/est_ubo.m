@@ -70,7 +70,7 @@ if sum(a) > 0
 end
 
 
-%% number of resources
+%% number of.ResList
 M = 1;
 %% number of classes
 R = size(rAvgTimes,2);

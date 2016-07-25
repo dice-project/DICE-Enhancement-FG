@@ -1,4 +1,4 @@
-function meanST = est_ci(arvT,respT,nServers,warmUp,dicefg_disp)
+function meanST = est_ci(metric,flags,dicefg_disp)
 % CI Complete Information estimation
 %
 % Configuration file fields:
@@ -11,11 +11,14 @@ function meanST = est_ci(arvT,respT,nServers,warmUp,dicefg_disp)
 % This code is released under the 3-Clause BSD License.
 
 %other parameters
-numExp = 1;
-V = nServers;
-K = size(respT,2) - 1;
 
-Ddetail = cell(1,K);
+arvT={metric.ResData{hash_metric('arvT'),hash_data(metric, metric.resPos, 1:length(metric.ResClassList))}};
+respT={metric.ResData{hash_metric('respT'),hash_data(metric, metric.resPos, 1:length(metric.ResClassList))}};
+V = flags.numServers;
+warmUp = flags.warmUp;
+numExp = 1;
+K = size(respT,2);
+
 sampleSize = size(respT{1},1);
 for j = 2:K
     sampleSize = sampleSize + size(respT{j},1);
@@ -30,14 +33,7 @@ else
 end
 
 for k = 1:K
-    times{k} = [arvT{k}/1000 respT{k}];
-end
-
-%compute departure times
-for k = 1:K
-    for i = 1:size(times{k},1)
-        times{k}(i,3) = times{k}(i,1) + times{k}(i,2);
-    end
+    times{k} = [arvT{k} respT{k} arvT{k}+respT{k}];
 end
 
 %build array with all events
@@ -155,5 +151,5 @@ for e = 1:numExp
     end
     meanST(:,e) = acum(:,2)./acum(:,1);
 end
-
+meanST=meanST(:)';
 end

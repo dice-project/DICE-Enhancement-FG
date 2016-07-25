@@ -2,7 +2,7 @@
 function dicefg(configFile)
 % put a java.opts file in  mcr_root/<ver>/bin/<arch> with -Xmx2096m
 warning off
-version = 0.2;
+version = '2.0.0';
 
 % Add subfolders
 %addpath(genpath(pwd));
@@ -28,46 +28,37 @@ while ~isempty(node)
             error('Verbose level must be either 0 (slient), 1 (normal) or 2 (debug)');
             exit
         end
-        dicefg_disp(1,sprintf('FG version %.1f : Copyright 2012-2016 (c) - Imperial College London.\n',version));
-    elseif strcmp(node.getNodeName, 'metric')
+        dicefg_disp(1,sprintf('FG module - version %s : Copyright 2012-2016 (c) - Imperial College London.\n',version));
+    elseif strcmp(node.getNodeName,'dataset')
         subNode = node.getFirstChild;
         while ~isempty(subNode)
-            %% a single method can be run, hence it determines the subNode
-            if strcmpi(subNode.getNodeName, 'method')
-                cur = cur + 1;
-                metric{cur}.('method') = char(subNode.getTextContent);
-            end
             %% read all the custom parameters
             if strcmpi(subNode.getNodeName, 'parameter')
-                metric{cur}.(char(subNode.getAttribute('name'))) = char(subNode.getAttribute('value'));
+                metric.(char(subNode.getAttribute('name'))) = char(subNode.getAttribute('value'));
             end
             subNode = subNode.getNextSibling;
         end
-        %% run the analysis for the metric
         try
-            dicefg_disp(1,sprintf('Processing metric %d ("%s" at "%s")',cur,metric{cur}.AnalyzeClass,metric{cur}.AnalyzeResource));
             %% load data
-            [filePath,fileName,fileExt] = fileparts(metric{cur}.ResourceDataFile);
+            [filePath,fileName,fileExt] = fileparts(metric.ResourceDataFile);
             if strcmpi(fileExt,'.mat')
                 dicefg_disp(1,'Loading resource data (mat format).');
-                loadedCell = load(metric{cur}.ResourceDataFile,'resdata'); metric{cur}.resdata=loadedCell.resdata;
-                loadedCell = load(metric{cur}.SystemDataFile,'sysdata'); metric{cur}.sysdata=loadedCell.sysdata;
-                loadedCell = load(metric{cur}.ResourceClassList,'classes'); metric{cur}.resclasses=loadedCell.resclasses;
-                loadedCell = load(metric{cur}.ResourceList,'resources'); metric{cur}.resources=loadedCell.resources;
+                loadedCell = load(metric.ResourceDataFile,'resdata'); metric.ResData=loadedCell.resdata;
+                loadedCell = load(metric.SystemDataFile,'sysdata'); metric.SysData=loadedCell.sysdata;
+                loadedCell = load(metric.ResourceClassList,'classes'); metric.ResClassList=loadedCell.resclasses;
+                loadedCell = load(metric.ResourceList,'resources'); metric.ResList=loadedCell.resources;
             elseif strcmpi(fileExt,'.json')
                 dicefg_disp(1,'Loading resource data (JSON format).');
                 fileName = strrep(fileName,'-resdata','');
-                [metric{cur}.resdata,metric{cur}.sysdata,metric{cur}.resources,metric{cur}.resclasses]=json2fg(filePath,fileName);
+                [metric.ResData,metric.SysData,metric.ResList,metric.ResClassList]=json2fg(filePath,fileName);
             else
                 error('Only .mat data files are supported in the current version.')
                 exit
             end
-            dicefg_disp(1,sprintf('Dataset has %d resources and %d classes.',length(metric{cur}.resources),length(metric{cur}.resclasses)));
-            metric{cur}.('classPos') = find(cellfun(@(X)strcmpi(metric{cur}.AnalyzeClass,X),metric{cur}.resclasses));
-            metric{cur}.('resPos') = find(cellfun(@(X)strcmpi(metric{cur}.AnalyzeResource,X),metric{cur}.resources));
+            dicefg_disp(1,sprintf('Dataset has %d resources and %d classes.',length(metric.ResList),length(metric.ResClassList)));
             %% sanitize data
-            [nRows,nColumns] = size(metric{cur}.resdata);
-            if nColumns ~= (length(metric{cur}.resclasses)+1)*length(metric{cur}.resources)
+            [nRows,nColumns] = size(metric.ResData);
+            if nColumns ~= (length(metric.ResClassList)+1)*length(metric.ResList)
                 error('Input files are inconsistent, not enough classes or resources in dataset');
                 exit
             end
@@ -75,16 +66,34 @@ while ~isempty(node)
                 dicefg_disp(0,'Data does not include all rows. Adding empty rows.')
                 for i=nRows+1:expectednRows
                     for j=1:nColumns
-                        metric{cur}.resdata{i,j}=[];
+                        metric.ResData{i,j}=[];
                     end
                 end
             end
         catch err
             err.message
-            error(sprintf('Cannot load resource data file: %s',metric{cur}.ResourceDataFile));
+            error(sprintf('Cannot load resource data file: %s',metric.ResourceDataFile));
             exit
         end
-        switch metric{cur}.Technology
+    elseif strcmp(node.getNodeName, 'metric')
+        subNode = node.getFirstChild;
+        while ~isempty(subNode)
+            %% a single.Method can be run, hence it determines the subNode
+            if strcmpi(subNode.getNodeName, 'method')
+                cur = cur + 1;
+                metric.('Method') = char(subNode.getTextContent);
+            end
+            %% read all the custom parameters
+            if strcmpi(subNode.getNodeName, 'parameter')
+                metric.(char(subNode.getAttribute('name'))) = char(subNode.getAttribute('value'));
+            end
+            subNode = subNode.getNextSibling;
+        end
+            metric.('classPos') = find(cellfun(@(X)strcmpi(metric.AnalyzeClass,X),metric.ResClassList));
+            metric.('resPos') = find(cellfun(@(X)strcmpi(metric.AnalyzeResource,X),metric.ResList));
+        %% run the analysis for the metric
+        dicefg_disp(1,sprintf('Processing metric %d ("%s" at "%s")',cur,metric.AnalyzeClass,metric.AnalyzeResource));
+        switch metric.Technology
             case 'hadoop'
                 dicefg_disp(2,'Running in technology-specific mode: Apache Hadoop dataset.')
                 dicefg_disp(1,'Loading Apache Hadoop information.')
@@ -102,19 +111,20 @@ while ~isempty(node)
         end
         
         %% DICE-FG Analyzer
-        if strfind(metric{cur}.method,'est')==1
-            %% Estimation methods
-            dicefg_disp(2,'Switching to estimation method handler.')
-            metric{cur} = dicefg_handler_est(metric{cur}, dicefg_disp);
-        elseif strfind(metric{cur}.method,'fit')==1
-            %% Fitting methods
-            dicefg_disp(2,'Switching to fitting method handler.')
-            metric{cur} = dicefg_handler_fit(metric{cur}, dicefg_disp);
+        if strfind(metric.Method,'est')==1
+            %% Estimation.Methods
+            dicefg_disp(2,'Switching to estimation.Method handler.')
+            metric = dicefg_handler_est(metric, dicefg_disp);
+        elseif strfind(metric.Method,'fit')==1
+            %% Fitting.Methods
+            dicefg_disp(2,'Switching to fitting.Method handler.')
+            metric = dicefg_handler_fit(metric, dicefg_disp);
         end
         
         %% DICE-FG Updater
         dicefg_disp(2,'Switching to UML update handler.')
-        dicefg_handler_umlupdate(metric{cur}, dicefg_disp);
+        dicefg_disp(1,sprintf('Saving metric %d ("%s" at "%s")',cur,metric.AnalyzeClass,metric.AnalyzeResource));
+        dicefg_handler_umlupdate(metric, dicefg_disp);
         
         dicefg_disp(1,sprintf('Metric %d completed.\n',cur));
     end
