@@ -10,9 +10,9 @@ try
         expression = sprintf('expr=%s',metric.UMLParam);
         if strfind(metric.method,'est')==1
             if length(metric.result)>1
-                replace = sprintf('expr=exp(mean=%16f)',metric.result(metric.classPos));
+                replace = sprintf('expr=exp(mean=%d)',metric.result(metric.classPos));
             else
-                replace = sprintf('expr=exp(mean=%16f)',metric.result);
+                replace = sprintf('expr=exp(mean=%d)',metric.result);
             end
         elseif strfind(metric.method,'fit')==1
             switch metric.method
@@ -26,26 +26,26 @@ try
                             metric.result{2} = min(metric.result{4});
                         case 'none' % do nothing
                     end
-                    replace = sprintf('expr=norm(mean=%16f, standDev=%16f)',metric.result{1},metric.result{2});
+                    replace = sprintf('expr=norm(mean=%d, standDev=%d)',metric.result{1},metric.result{2});
                 case 'fit-exp'
-                    replace = sprintf('expr=exp(mean=%16f)',metric.result);
+                    replace = sprintf('expr=exp(mean=%d)',metric.result);
                 case 'fit-gamma'
                     shape = metric.result(1);
                     scale = metric.result(2);
                     [m] = gamstat(shape,scale);
-                    replace = sprintf('expr=gamma(k=%16f,mean=%16f)',shape,m);
+                    replace = sprintf('expr=gamma(k=%d,mean=%d)',shape,m);
                 case 'fit-erl'
                     shape = metric.result(1);
                     scale = metric.result(2);
                     [m] = gamstat(shape,scale);
-                    replace = sprintf('expr=erl(k=%16f,mean=%16f)',round(shape),m);
+                    replace = sprintf('expr=erl(k=%d,mean=%d)',round(shape),m);
                 case 'fit-ph2'
                     MAP=metric.result;
                     [alpha,T]=map2ph(MAP);
-                    replace = sprintf('expr=ph2(lambda0=%16f,lambda01=%16f,lambda1=%16f,alpha0=%16f)',-T(1,1),T(1,2),-T(2,2),alpha(1));
+                    replace = sprintf('expr=ph2(lambda0=%d,lambda01=%d,lambda1=%d,alpha0=%d)',-T(1,1),T(1,2),-T(2,2),alpha(1));
                 case 'fit-mmpp2'
                     MAP=metric.result;
-                    replace = sprintf('expr=mmpp2(lambda0=%16f,lambda1=%16f,sigma0=%16f,sigma1=%16f)',MAP{2}(1,1),MAP{2}(2,2),MAP{1}(1,2),MAP{1}(2,1));
+                    replace = sprintf('expr=mmpp2(lambda0=%d,lambda1=%d,sigma0=%d,sigma1=%d)',MAP{2}(1,1),MAP{2}(2,2),MAP{1}(1,2),MAP{1}(2,1));
             end
         end
         f = strrep(f,expression,replace);

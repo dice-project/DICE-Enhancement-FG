@@ -3,6 +3,7 @@ mcc -d bin/ -m dicefg.m -N -p stats -p optim -a ./* -a ./lib/jsonlab/* -a ./algo
 cd bin/
 if ispc
 movefile readme.txt readme-win.txt
+delete requiredMCRProducts.txt  
 end
 if isunix
 movefile readme.txt readme-x86_64.txt

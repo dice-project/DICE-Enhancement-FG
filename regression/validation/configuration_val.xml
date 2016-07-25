@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DICE-FG>   
+    <verbose>2</verbose>
+    <metric>
+        <method>est-ubr</method>
+        <parameter name='startTime' value='1412773199998' />
+        <parameter name='endTime' value='1492581' />
+        <parameter name='Flags' value='numServers=1, warmUp=0' />
+        <parameter name='ResourceList' value='./regression/validation/val-resources.json' />
+        <parameter name='ResourceDataFile' value='./regression/validation/val-resdata.json' />
+        <parameter name='ResourceClassList' value='./regression/validation/val-resclasses.json' />
+        <parameter name='SystemDataFile' value='./regression/validation/val-sysdata.json' />
+        <parameter name='SystemClassList' value='./regression/validation/val-sysclasses.json' />
+        <parameter name='AnalyzeClass' value='class2' />
+        <parameter name='AnalyzeResource' value='resource1' />
+        <parameter name='Confidence' value='mean' />
+        <parameter name='Technology' value='agnostic' />
+        <parameter name='TechnologyInfo' value='' />
+        <parameter name='UMLParam' value='$redT'/>
+        <parameter name='UMLParamType' value='hostDemand'/>
+        <parameter name='UMLInput' value='./regression/validation/model.uml'/>
+        <parameter name='UMLOutput' value='./regression/validation/model.out'/>
+    </metric>
+    <metric>
+        <method>est-ubr</method>
+        <parameter name='startTime' value='1412773199998' />
+        <parameter name='endTime' value='1492581' />
+        <parameter name='Flags' value='numServers=1, warmUp=0' />
+        <parameter name='ResourceList' value='./regression/validation/val-resources.json' />
+        <parameter name='ResourceDataFile' value='./regression/validation/val-resdata.json' />
+        <parameter name='ResourceClassList' value='./regression/validation/val-resclasses.json' />
+        <parameter name='SystemDataFile' value='./regression/validation/val-sysdata.json' />
+        <parameter name='SystemClassList' value='./regression/validation/val-sysclasses.json' />
+        <parameter name='AnalyzeClass' value='class1' />
+        <parameter name='AnalyzeResource' value='resource1' />
+        <parameter name='Confidence' value='mean' />
+        <parameter name='Technology' value='agnostic' />
+        <parameter name='TechnologyInfo' value='' />
+        <parameter name='UMLParam' value='$redT'/>
+        <parameter name='UMLParamType' value='hostDemand'/>
+        <parameter name='UMLInput' value='./regression/validation/model.uml'/>
+        <parameter name='UMLOutput' value='./regression/validation/model.out'/>
+    </metric>
+</DICE-FG>

@@ -22,7 +22,7 @@ respT=(expr=$RT,statQ=mean,source=calc)}</body>
       <group xmi:type="uml:ActivityPartition" xmi:id="_VYd2gDllEeaE4deiM0Jlvg" name="Reducer" node="_vVW-sDlXEeaE4deiM0Jlvg" represents="_EPQdYDlmEeaE4deiM0Jlvg">
         <ownedComment xmi:type="uml:Comment" xmi:id="_XVttsDliEeaE4deiM0Jlvg" annotatedElement="_vVW-sDlXEeaE4deiM0Jlvg">
           <body>{nTasks=[$nR1,$nR2,$nR3];
- hostDemand=[(expr=exp(mean=        0.629542),unit=ms,statQ=mean,source=est)]}</body>
+ hostDemand=[(expr=exp(mean=1.138917e+00),unit=ms,statQ=mean,source=est)]}</body>
         </ownedComment>
       </group>
       <group xmi:type="uml:ActivityPartition" xmi:id="_qYQqMDllEeaE4deiM0Jlvg" name="Mapper" node="_uZmhEDlXEeaE4deiM0Jlvg" represents="_DTxskDlmEeaE4deiM0Jlvg">
@@ -167,7 +167,7 @@ respT=(expr=$RT,statQ=mean,source=calc)}</body>
     <hadoopExtDelay>$th3</hadoopExtDelay>
   </Hadoop:HadoopWorkloadEvent>
   <Hadoop:HadoopOperation xmi:id="_-5CVsDlcEeaE4deiM0Jlvg" base_NamedElement="_vVW-sDlXEeaE4deiM0Jlvg" base_Action="_vVW-sDlXEeaE4deiM0Jlvg">
-    <hostDemand>(expr=exp(mean=        0.629542),unit=ms,statQ=mean,source=est)</hostDemand>
+    <hostDemand>(expr=exp(mean=1.138917e+00),unit=ms,statQ=mean,source=est)</hostDemand>
     <nTasks>$nR1</nTasks>
     <nTasks>$nR2</nTasks>
     <nTasks>$nR3</nTasks>
