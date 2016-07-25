@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<DICE-FG>   
+<fg>   
     <verbose>1</verbose>
     <dataset>
         <parameter name='StartTime' value='0' />
@@ -57,4 +57,4 @@
         <parameter name='UMLInput' value='./regression/validation/model.uml'/>
         <parameter name='UMLOutput' value='./regression/validation/model.out'/>
     </metric>
-</DICE-FG>
+</fg>

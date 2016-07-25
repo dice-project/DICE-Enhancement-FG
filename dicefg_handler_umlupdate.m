@@ -1,5 +1,5 @@
 function dicefg_handler_umlupdate(metric, dicefg_disp)
-dicefg_disp(1,sprintf('Updating context parameter %s in UML model.',metric.UMLParam));
+dicefg_disp(2,sprintf('Updating context parameter %s in UML model.',metric.UMLParam));
 try
     dicefg_disp(2,'Reading input UML model');
     fid  = fopen(metric.UMLInput,'r');
@@ -40,7 +40,7 @@ try
             end
         end
         f = strrep(f,expression,replace);
-        dicefg_disp(1,sprintf('Written UML hostDemand: %s',replace));
+        dicefg_disp(1,sprintf('Written UML hostDemand (contextParam: %s): %s',metric.UMLParam,replace));
         dicefg_disp(2,sprintf('Expression: %s\nReplaced: %s',expression,replace));
     end
     dicefg_disp(2,'Writing output UML model');

@@ -28,7 +28,7 @@ while ~isempty(node)
             error('Verbose level must be either 0 (slient), 1 (normal) or 2 (debug)');
             exit
         end
-        dicefg_disp(1,sprintf('FG module - version %s : Copyright 2012-2016 (c) - Imperial College London.\n',version));
+        dicefg_disp(1,sprintf('FG module - version %s: Copyright 2012-2016 (c) - Imperial College London.',version));
     elseif strcmp(node.getNodeName,'dataset')
         subNode = node.getFirstChild;
         while ~isempty(subNode)
@@ -70,6 +70,7 @@ while ~isempty(node)
                     end
                 end
             end
+            
             switch metric.Technology
                 case 'hadoop'
                     dicefg_disp(2,'Running in technology-specific mode: Apache Hadoop dataset.')
@@ -92,6 +93,7 @@ while ~isempty(node)
             exit
         end
     elseif strcmp(node.getNodeName, 'metric')
+        metric = setMetricDefaults(metric);
         subNode = node.getFirstChild;
         while ~isempty(subNode)
             %% a single.Method can be run, hence it determines the subNode
@@ -123,11 +125,24 @@ while ~isempty(node)
         
         %% DICE-FG Updater
         dicefg_disp(2,'Switching to UML update handler.')
-        dicefg_disp(1,sprintf('Saving metric %d ("%s" at "%s")',cur,metric.AnalyzeClass,metric.AnalyzeResource));
+        dicefg_disp(2,sprintf('Saving metric %d ("%s" at "%s")',cur,metric.AnalyzeClass,metric.AnalyzeResource));
         dicefg_handler_umlupdate(metric, dicefg_disp);
         
-        dicefg_disp(1,sprintf('Metric %d completed.\n',cur));
+        dicefg_disp(2,sprintf('Metric %d completed.',cur));
     end
     node = node.getNextSibling;
 end
+end
+
+function metric=setMetricDefaults(metric)
+%% Set default parameters
+metric.('Confidence')='mean';
+metric.('Flags')='';
+metric.('AnalyzeClass')='';
+metric.('AnalyzeResource')='';
+metric.('AnalyzeMetric')='';
+metric.('UMLParam')='';
+metric.('UMLParamType')='';
+metric.('UMLInput')='';
+metric.('UMLOutput')='';
 end
