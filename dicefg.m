@@ -2,7 +2,7 @@
 function dicefg(configFile)
 % put a java.opts file in  mcr_root/<ver>/bin/<arch> with -Xmx2096m
 warning off
-version = '2.1.0';
+version = '2.2.0';
 
 % Add subfolders
 %addpath(genpath(pwd));
@@ -96,6 +96,17 @@ while ~isempty(node)
         metric.('Resource') = char(node.getAttribute('value'));
         metric.('Method') = char(node.getAttribute('algorithm'));
         metric.('Flags') = char(node.getAttribute('flags'));
+        
+        %% run the analysis for the metric
+        dicefg_disp(1,sprintf('Processing metric "%s" at "%s"',metric.Class,metric.Resource));
+        metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));
+        
+        if strfind(metric.Method,'est')==1
+            %% Estimation.Methods
+            dicefg_disp(2,'Switching to estimation method handler.')
+            metric = dicefg_handler_est(metric, dicefg_disp);
+        end
+        
         subNode0 = node.getFirstChild;
         while ~isempty(subNode0)
             if strcmpi(subNode0.getNodeName, 'output')
@@ -108,19 +119,10 @@ while ~isempty(node)
                     subNode = subNode.getNextSibling;
                 end
                 metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.Class,X),metric.ResClassList));
-                metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));
                 
-                %% run the analysis for the metric
-                dicefg_disp(1,sprintf('Processing metric "%s" at "%s"',metric.Class,metric.Resource));
-                
-                %% DICE-FG r
-                if strfind(metric.Method,'est')==1
-                    %% Estimation.Methods
-                    dicefg_disp(2,'Switching to estimation.Method handler.')
-                    metric = dicefg_handler_est(metric, dicefg_disp);
-                elseif strfind(metric.Method,'fit')==1
+                if strfind(metric.Method,'fit')==1
                     %% Fitting.Methods
-                    dicefg_disp(2,'Switching to fitting.Method handler.')
+                    dicefg_disp(2,'Switching to fitting method handler.')
                     metric = dicefg_handler_fit(metric, dicefg_disp);
                 end
                 
