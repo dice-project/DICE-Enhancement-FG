@@ -27,9 +27,9 @@ try
             if ~dicefg_preproc_check_dep(metric,resDataDep,sysDataDep)
                 error(sprintf('Data dependencies for %s are not satisfied.',metric.Method));
             end
-            % estimate number of jobs
-            % estimate think time
-            %            [metric.Result,metric.ConfInt] = est_qmle( metric.ResData, qlSample, nbJobs, thinkTime, data_needed );
+            [metric.Result,sigma] = est_res_qmle( metric,flags,dicefg_disp );
+            metric.ConfInt(1:2,1) = [metric.Result-sigma]';
+            metric.ConfInt(1:2,2) = [metric.Result+sigma]';
         case 'est-res-qbmr'
             dicefg_disp(1,'Running resource-level queue-based memory regression (est-res-qmr)');
             [resDataDep,sysDataDep] = est_res_qbmr_dependencies(metric);
@@ -41,18 +41,13 @@ try
         case 'est-res-extdelay'
             dicefg_disp(1,'Running resource-level external delay estimation (est-res-extdelay)');
             metric.Result = est_res_extdelay(metric,flags,dicefg_disp);                        
+        case 'est-res-maxpopulation'
+            dicefg_disp(1,'Running resource-level max population estimation (est-max-population)');
+            metric.Result = est_res_max_population(metric,flags,dicefg_disp);
     end
 catch err
     error(sprintf('Unexpected error (%s): %s', metric.Method, err.message));
     exit
-end
-dicefg_disp(2,'Applying confidence setting.');
-switch metric.Confidence
-    case 'upper'
-        metric.Result = metric.ConfInt(:,2);
-    case 'lower'
-        metric.Result = metric.ConfInt(:,1);
-    case 'mean' % do nothing
 end
 dicefg_disp(1,sprintf('Estimation completed in %.6f seconds.',toc(t_run)));
 end

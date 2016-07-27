@@ -15,7 +15,6 @@ for r=1:length(metric.ResClassList)
     state=[ arvT,  ones(size(arvT));
         depT, -ones(size(depT))];
     state=sortrows(state,1);
-    plot(cumsum(state(:,2)))
     maxPop(r)=max(cumsum(state(:,2)));
 end
 end

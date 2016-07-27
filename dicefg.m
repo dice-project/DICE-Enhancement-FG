@@ -76,7 +76,6 @@ while ~isempty(node)
                     end
                 end
             end
-            
             switch metric.Technology
                 case 'hadoop'
                     dicefg_disp(2,'Running in technology-specific mode: Apache Hadoop dataset.')
@@ -103,7 +102,7 @@ while ~isempty(node)
         metric.('Resource') = char(node.getAttribute('value'));
         %% run the analysis for the resource
         dicefg_disp(1,sprintf('Processing resource "%s"',metric.Resource));
-        metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));        
+        metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));
         node0 = node.getFirstChild;
         while ~isempty(node0)
             if strcmpi(node0.getNodeName, 'algorithm')
@@ -134,6 +133,16 @@ while ~isempty(node)
                             dicefg_disp(2,'Switching to fitting method handler.')
                             metric = dicefg_handler_fit(metric, dicefg_disp);
                         end
+                        
+                        %% (Moving this could be bug prone)
+                        dicefg_disp(2,'Applying confidence setting.');
+                        switch metric.Confidence
+                            case 'upper'
+                                metric.Result = metric.ConfInt(:,2);
+                            case 'lower'
+                                metric.Result = metric.ConfInt(:,1);
+                            case 'mean' % do nothing
+                        end                        
                         
                         %% DICE-FG Updater
                         dicefg_disp(2,'Switching to UML update handler.')

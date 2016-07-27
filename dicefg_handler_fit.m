@@ -48,14 +48,5 @@ catch err
     error(sprintf('Unexpected error (%s): %s', metric.Method, err.message));
     exit
 end
-dicefg_disp(2,'Applying confidence setting.');
-switch metric.Confidence
-    case 'upper'
-        metric.Result = metric.ConfInt(:,2);
-    case 'lower'
-        metric.Result = metric.ConfInt(:,1);
-    case 'mean' % do nothing
-        metric.Result = metric.Result(:);
-end
 dicefg_disp(1,sprintf('Fitting completed in %.6f seconds.',toc(t_run)));
 end

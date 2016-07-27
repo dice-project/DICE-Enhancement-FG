@@ -1,4 +1,4 @@
-function extDelay = est_res_extdelay(metric,flags,dicefg_disp)
+function [extDelay, jobPop] = est_res_extdelay(metric,flags,dicefg_disp)
 % EST_RES_EXTDELAY Estimate average external delay (think time) seen
 % locally at the resource.  The resource is assumed to be in a closed loop
 % with a delay node.

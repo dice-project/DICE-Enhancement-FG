@@ -1,38 +1,20 @@
-function [D,confint] = est_qmle( data, qlSample, nbJobs, thinkTime, data_needed )
-nbClasses = size(data,2) - 1;
-nbNodes = 2;
+function [theta,confint] = est_res_qmle( metric,flags,dicefg_disp )
+[extDelay, jobPop] = est_res_extdelay(metric,flags,dicefg_disp);
+qlenAvg = cell2mat({metric.ResData{hash_metric('qlenAvg'),hash_data(metric, metric.ResIndex, 1:length(metric.ResClassList))}});
+% determine probability of each sampling period
+weightsTS = diff(cell2mat({metric.ResData{hash_metric('ts'),hash_data(metric, metric.ResIndex, 1:length(metric.ResClassList))}}),1);
+weightsTS = weightsTS./repmat(sum(weightsTS,1),size(weightsTS,1),1);
+avgQlen = sum(weightsTS.*qlenAvg,1);
 
-if ~exist('nbJobs','var')
-    nbJobs = zeros(1,nbClasses);
+theta = zeros(1,length(metric.ResClassList));
+for j = 1:length(metric.ResClassList)
+    theta(j) = avgQlen(j)/(jobPop(j)-avgQlen(j)) * extDelay(j)/(1+sum(avgQlen)-avgQlen(j)/jobPop(j));
 end
 
-if ~exist('data_needed','var')
-    data_needed = 0;
+qlSamples = size(qlenAvg,1); % we take the worst case where the number of samples is the number of samples of the averages
+criticalValue = 1.96; % 95-percent confidence
+confint = confidence_interval( theta, jobPop, extDelay, avgQlen, criticalValue, qlSamples );
 end
-
-[prob_nbCustomer, nbJobs, ~, nSamples] = analyseData( data, nbJobs, nbClasses, nbNodes, data_needed);
-
-for i = 1:nbClasses
-    Q(1,i)= sum(prob_nbCustomer(:,nbClasses+i).*prob_nbCustomer(:,end));
-end
-
-if ~exist('thinkTime','var')
-    for i = 1:nbClasses
-        thinkTime(1,i)= nbJobs(i)/mean(data{6,i})-mean(data{5,i});
-    end
-end
-
-D = mleApprox( Q, nbNodes-1, nbClasses, nbJobs, thinkTime );
-
-try
-    confint = confidence_interval( D, nbJobs, thinkTime, Q, 1.96, qlSample );
-    disp('Confidence interval for each demand')
-catch
-    disp('Confidence interval computation failed');
-end
-
-end
-
 
 function I = fisher_information(L,N,Z,n,samples)
 Q = amvabs(L,N,Z);
@@ -47,11 +29,9 @@ for k = 1:M
                 
                 NP = N;
                 NP(h) = NP(h) - 1;
-                QP = qmva(LP,NP,Z);
-                %[~,QP] = aql(LP,NP,Z);
+                QP = amvabs(LP,NP,Z);
                 if k == r && h == s
                     I(index_r,index_c) = (Q(k,h)*(QP(k+1,h)+QP(1,h)-Q(k,h))+n(k,h))/L(k,h)^2*samples;
-                    %I(index_r,index_c) = (Q(k,h)-n(k,h))/L(k,h)^2+var_n(k,h)/L(k,h)^2;
                 else
                     if k == r
                         I(index_r,index_c) = Q(k,h)/L(k,h)/L(r,s)*(QP(r+1,s)+QP(1,s)-Q(r,s));
@@ -68,18 +48,7 @@ end
 
 end
 
-function [ theta ] = mleApprox( Q, M, R, K, Z )
-
-theta = zeros(M,R);
-for i = 1:M
-    for j = 1:R
-        theta(i,j) = Q(i,j)/(K(j)-sum(Q(:,j),1))*Z(j)/(1+sum(Q(i,:),2)-Q(i,j)/K(j));
-    end
-end
-
-end
-
-function [XN,QN,UN]=amvabs(L,N,Z,tol,maxiter,QN)
+function [QN]=amvabs(L,N,Z,tol,maxiter,QN)
 if nargin<4
     tol = 1e-6;
 end
@@ -120,11 +89,6 @@ for it=1:maxiter
             end
         end
     end
-    for r=1:R
-        for i=1:M
-            UN(i,r) = XN(r)*L(i,r);
-        end
-    end
     err=(abs(QN-QN_1) - tol*QN_1);
     if max(err) <= 0
         break
@@ -146,7 +110,7 @@ flag = 0;
 for i = 1:rank(A)
     if eig_A(i) > 0
         flag = 1;
-        exit
+        return
     end
 end
 
