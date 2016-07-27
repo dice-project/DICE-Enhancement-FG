@@ -27,13 +27,13 @@ MAP = mmpp2_fit3(E1j(1),(1+SCVj(1))*E1j(1)^2,E3j(1),G2j(1));
 if map_isfeasible(MAP) == 0
     if SCVj(1)<0.5
         MAP = map_erlang(E1j(1),2);
-%        %fprintf(1,'MAP 1 is erlang-2\n');
+        %        %fprintf(1,'MAP 1 is erlang-2\n');
     else
         MAP = map2_fit(E1j(1),(1+SCVj(1))*E1j(1)^2,-1,G2j(1));
-%        %fprintf(1,'MAP 1 has presumably infeasible E3\n');
+        %        %fprintf(1,'MAP 1 has presumably infeasible E3\n');
         if isempty(MAP)
             MAP = map2_fit(E1j(1),(1+SCVj(1))*E1j(1)^2,-1,0);
-%           %fprintf(1,'MAP 1 has infeasible G2\n');
+            %           %fprintf(1,'MAP 1 has infeasible G2\n');
         end
     end
 end
@@ -43,14 +43,14 @@ for j=2:J
     if map_isfeasible(MAPj) == 0
         if SCVj(j)<1
             MAPj = map2_exponential(E1j(j));
-%            %fprintf(1,'MAP has low variability\n',j);
+            %            %fprintf(1,'MAP has low variability\n',j);
         else
             MAPj = map2_fit(E1j(j),(1+SCVj(j))*E1j(j)^2,-1,G2j(j));
-%            %fprintf(1,'MAP %d has presumably infeasible E3\n',j);
+            %            %fprintf(1,'MAP %d has presumably infeasible E3\n',j);
             if isempty(MAPj)
                 MAPj = map2_fit(E1j(j),(1+SCVj(j))*E1j(j)^2,-1,0);
-%                %fprintf(1,'MAP %d has infeasible G2\n',j);
-            end            
+                %                %fprintf(1,'MAP %d has infeasible G2\n',j);
+            end
             lambda=eig(-inv(MAPj{1}));
             D0 = diag(-1./(lambda));
             P = map_embedded(MAPj);
@@ -59,14 +59,18 @@ for j=2:J
             MAPj=map_normalize({D0,D1});
         end
     end
-    subMAPs{j}=MAPj;
+    if isempty(MAPj)
+        subMAPs{j}=map_exponential(E1j(j));
+    else
+        subMAPs{j}=MAPj;
+    end
     MAP= map_kpc(MAP,MAPj);
 end
 for j=1:J
     if map_isfeasible(subMAPs{j})
-%        %fprintf(1,'MAP %d is feasible\n',j);
+        %        %fprintf(1,'MAP %d is feasible\n',j);
     else
-%        %fprintf(1,'MAP %d is infeasible\n',j);
+        %        %fprintf(1,'MAP %d is infeasible\n',j);
     end
 end
 MAP=map_normalize(MAP);

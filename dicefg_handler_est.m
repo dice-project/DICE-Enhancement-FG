@@ -1,49 +1,46 @@
 function metric=dicefg_handler_est(metric,dicefg_disp)
 t_run = tic;
-supportedMethods = {'est-ci','est-ubr','est-qbmr','est-qmle','est-sys-jobs','est-sys-extdelay'};
+supportedMethods = {'est-res-ci','est-res-ubr','est-res-qbmr','est-res-qmle','est-res-extdelay'};
 try
     metric.Method = validatestring(metric.Method,supportedMethods);
+    flags = dicefg_parseflags(metric);
     switch metric.Method
-        case 'est-ci'
-            dicefg_disp(1,'Running complete information method (est-ci).');
-            flags = dicefg_parseflags(metric);
-            [resDataDep,sysDataDep] = est_ci_dependencies(metric);
+        case 'est-res-ci'
+            dicefg_disp(1,'Running resource-level complete information method (est-res-ci).');
+            [resDataDep,sysDataDep] = est_res_ci_dependencies(metric);
             if ~dicefg_preproc_check_dep(metric,resDataDep,sysDataDep)
                 error(sprintf('Data dependencies for %s are not satisfied',metric.Method));
             end
-            metric.Result = est_ci(metric,flags,dicefg_disp);
+            metric.Result = est_res_ci(metric,flags,dicefg_disp);
             metric.ConfInt = [metric.Result,metric.Result]; % confidence intervals not available
-        case 'est-ubr'
-            dicefg_disp(1,'Running utilization-based regression (est-ubr).');
-            flags = dicefg_parseflags(metric);
-            [resDataDep,sysDataDep] = est_ubr_dependencies(metric);
+        case 'est-res-ubr'
+            dicefg_disp(1,'Running resource-level utilization-based regression (est-res-ubr).');
+            [resDataDep,sysDataDep] = est_res_ubr_dependencies(metric);
             if ~dicefg_preproc_check_dep(metric,resDataDep,sysDataDep)
                 error(sprintf('Data dependencies for %s are not satisfied',metric.Method));
             end
-            metric.Result = est_ubr(metric,flags,dicefg_disp);
+            metric.Result = est_res_ubr(metric,flags,dicefg_disp);
             metric.ConfInt = [metric.Result,metric.Result]; % confidence intervals not available
-        case 'est-qmle'
-            dicefg_disp(1,'Running queue-based maximum likelihood estimation (est-qmle).');
-            [resDataDep,sysDataDep] = est_qmle_dependencies(metric);
+        case 'est-res-qmle'
+            dicefg_disp(1,'Running resource-level queue-based maximum likelihood estimation (est-res-qmle).');
+            [resDataDep,sysDataDep] = est_res_qmle_dependencies(metric);
             if ~dicefg_preproc_check_dep(metric,resDataDep,sysDataDep)
                 error(sprintf('Data dependencies for %s are not satisfied.',metric.Method));
             end
             % estimate number of jobs
             % estimate think time
-%            [metric.Result,metric.ConfInt] = est_qmle( metric.ResData, qlSample, nbJobs, thinkTime, data_needed );
-        case 'est-qbmr'
-            dicefg_disp(1,'Running queue-based memory regression (est-qmr)');
-            flags = dicefg_parseflags(metric);
-            [resDataDep,sysDataDep] = est_qbmr_dependencies(metric);
+            %            [metric.Result,metric.ConfInt] = est_qmle( metric.ResData, qlSample, nbJobs, thinkTime, data_needed );
+        case 'est-res-qbmr'
+            dicefg_disp(1,'Running resource-level queue-based memory regression (est-res-qmr)');
+            [resDataDep,sysDataDep] = est_res_qbmr_dependencies(metric);
             if ~dicefg_preproc_check_dep(metric,resDataDep,sysDataDep)
                 error(sprintf('Data dependencies for %s are not satisfied.',metric.Method));
             end
             metric.Result = est_qbmr(metric.ResData,flags.numServers,dicefg_disp);
             metric.ConfInt = [metric.Result,metric.Result]; % confidence intervals not available
-        case 'est-sys-jobs'
-            % not supported yet
-        case 'est-sys-extdelay'
-            % not supported yet
+        case 'est-res-extdelay'
+            dicefg_disp(1,'Running resource-level external delay estimation (est-res-extdelay)');
+            metric.Result = est_res_extdelay(metric,flags,dicefg_disp);                        
     end
 catch err
     error(sprintf('Unexpected error (%s): %s', metric.Method, err.message));

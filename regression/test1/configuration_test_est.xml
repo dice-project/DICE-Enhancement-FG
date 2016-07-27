@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <fg>   
-    <verbose>1</verbose>
+    <configuration>
+        <parameter type='Verbose' value='1' />
+	</configuration>
     <dataset>
         <parameter type='StartTime' value='1412773199998' />
         <parameter type='EndTime' value='1412776799998' />        
@@ -12,22 +14,24 @@
         <parameter type='Technology' value='agnostic' />
         <parameter type='TechnologyInfo' value='' />
     </dataset>
-    <resource value='resource1' algorithm='est-ci' flags='numServers=1, warmUp=0' >
-        <output>
-            <parameter type='Class' value='class1' />
-            <parameter type='Confidence' value='mean' />
-            <parameter type='UMLParam' value='$redT'/>
-            <parameter type='UMLParamType' value='hostDemand'/>
-            <parameter type='UMLInput' value='./regression/test1/model.uml'/>
-            <parameter type='UMLOutput' value='./regression/test1/model.out'/>
-        </output>
-        <output>
-            <parameter type='Class' value='class2' />
-            <parameter type='Confidence' value='mean' />
-            <parameter type='UMLParam' value='$mapT'/>
-            <parameter type='UMLParamType' value='hostDemand'/>
-            <parameter type='UMLInput' value='./regression/test1/model.out'/>
-            <parameter type='UMLOutput' value='./regression/test1/model.out'/>
-        </output>
+    <resource value='resource1'>
+        <algorithm value='est-ci' flags='numServers=1, warmUp=0' >
+            <output>
+                <parameter type='Class' value='class1' />
+                <parameter type='Confidence' value='mean' />
+                <parameter type='UMLParam' value='$redT'/>
+                <parameter type='UMLParamType' value='hostDemand'/>
+                <parameter type='UMLInput' value='./regression/test1/model.uml'/>
+                <parameter type='UMLOutput' value='./regression/test1/model.out'/>
+            </output>
+            <output>
+                <parameter type='Class' value='class2' />
+                <parameter type='Confidence' value='mean' />
+                <parameter type='UMLParam' value='$mapT'/>
+                <parameter type='UMLParamType' value='hostDemand'/>
+                <parameter type='UMLInput' value='./regression/test1/model.out'/>
+                <parameter type='UMLOutput' value='./regression/test1/model.out'/>
+            </output>
+        </algorithm>
     </resource>
 </fg>

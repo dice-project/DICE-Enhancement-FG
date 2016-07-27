@@ -15,16 +15,23 @@ xDoc = xmlread(configFile);
 rootNode = xDoc.getDocumentElement.getChildNodes; % get the <DICE-FG> root
 node = rootNode.getFirstChild;
 while ~isempty(node)
-    if strcmp(node.getNodeName, 'verbose')
-        verbose=str2num(node.getTextContent);
-        if verbose == 0
+    if strcmp(node.getNodeName, 'configuration')
+        subNode = node.getFirstChild;
+        while ~isempty(subNode)
+            %% read all the custom parameters
+            if strcmpi(subNode.getNodeName, 'parameter')
+                configuration.(char(subNode.getAttribute('type'))) = str2num(subNode.getAttribute('value'));
+            end
+            subNode = subNode.getNextSibling;
+        end
+        if configuration.Verbose == 0
             dicefg_disp = @dicefg_disp_silent;
-        elseif verbose == 1
+        elseif configuration.Verbose == 1
             dicefg_disp = @dicefg_disp_normal;
-        elseif verbose == 2
+        elseif configuration.Verbose == 2
             dicefg_disp = @dicefg_disp_debug;
         else
-            error('Verbose level must be either 0 (slient), 1 (normal) or 2 (debug)');
+            error('Verbose level must be either 0 (silent), 1 (normal) or 2 (debug)');
             exit
         end
         dicefg_disp(1,sprintf('FG module - version %s: Copyright 2012-2016 (c) - Imperial College London.',version));
@@ -94,44 +101,49 @@ while ~isempty(node)
     elseif strcmp(node.getNodeName,'resource')
         metric = setMetricDefaults(metric);
         metric.('Resource') = char(node.getAttribute('value'));
-        metric.('Method') = char(node.getAttribute('algorithm'));
-        metric.('Flags') = char(node.getAttribute('flags'));
-        
-        %% run the analysis for the metric
-        dicefg_disp(1,sprintf('Processing metric "%s" at "%s"',metric.Class,metric.Resource));
-        metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));
-        
-        if strfind(metric.Method,'est')==1
-            %% Estimation.Methods
-            dicefg_disp(2,'Switching to estimation method handler.')
-            metric = dicefg_handler_est(metric, dicefg_disp);
-        end
-        
-        subNode0 = node.getFirstChild;
-        while ~isempty(subNode0)
-            if strcmpi(subNode0.getNodeName, 'output')
-                subNode = subNode0.getFirstChild;
-                while ~isempty(subNode)
-                    %% read all the custom parameters
-                    if strcmpi(subNode.getNodeName, 'parameter')
-                        metric.(char(subNode.getAttribute('type'))) = char(subNode.getAttribute('value'));
+        %% run the analysis for the resource
+        dicefg_disp(1,sprintf('Processing resource "%s"',metric.Resource));
+        metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));        
+        node0 = node.getFirstChild;
+        while ~isempty(node0)
+            if strcmpi(node0.getNodeName, 'algorithm')
+                metric.('Method') = char(node0.getAttribute('value'));
+                metric.('Flags') = char(node0.getAttribute('flags'));
+                
+                if strfind(metric.Method,'est')==1
+                    %% Estimation.Methods
+                    dicefg_disp(2,'Switching to estimation method handler.')
+                    metric = dicefg_handler_est(metric, dicefg_disp);
+                end
+                
+                subNode0 = node0.getFirstChild;
+                while ~isempty(subNode0)
+                    if strcmpi(subNode0.getNodeName, 'output')
+                        subNode = subNode0.getFirstChild;
+                        while ~isempty(subNode)
+                            %% read all the custom parameters
+                            if strcmpi(subNode.getNodeName, 'parameter')
+                                metric.(char(subNode.getAttribute('type'))) = char(subNode.getAttribute('value'));
+                            end
+                            subNode = subNode.getNextSibling;
+                        end
+                        metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.Class,X),metric.ResClassList));
+                        
+                        if strfind(metric.Method,'fit')==1
+                            %% Fitting.Methods
+                            dicefg_disp(2,'Switching to fitting method handler.')
+                            metric = dicefg_handler_fit(metric, dicefg_disp);
+                        end
+                        
+                        %% DICE-FG Updater
+                        dicefg_disp(2,'Switching to UML update handler.')
+                        dicefg_disp(2,sprintf('Saving metric "%s" at "%s"',metric.Class,metric.Resource));
+                        dicefg_handler_umlupdate(metric, dicefg_disp);
                     end
-                    subNode = subNode.getNextSibling;
+                    subNode0 = subNode0.getNextSibling;
                 end
-                metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.Class,X),metric.ResClassList));
-                
-                if strfind(metric.Method,'fit')==1
-                    %% Fitting.Methods
-                    dicefg_disp(2,'Switching to fitting method handler.')
-                    metric = dicefg_handler_fit(metric, dicefg_disp);
-                end
-                
-                %% DICE-FG Updater
-                dicefg_disp(2,'Switching to UML update handler.')
-                dicefg_disp(2,sprintf('Saving metric "%s" at "%s"',metric.Class,metric.Resource));
-                dicefg_handler_umlupdate(metric, dicefg_disp);
             end
-            subNode0 = subNode0.getNextSibling;
+            node0 = node0.getNextSibling;
         end
     end
     node = node.getNextSibling;
