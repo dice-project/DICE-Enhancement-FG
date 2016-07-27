@@ -1,4 +1,4 @@
-function demEst = est_ubr(metric, flags, dicefg_disp)
+function demEst = est_res_ubr(metric, flags, dicefg_disp)
 % UBR Utilization-based regression.
 %
 % Copyright (c) 2012-2016, Imperial College London

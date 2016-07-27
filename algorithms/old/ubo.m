@@ -70,7 +70,7 @@ if sum(a) > 0
 end
 
 
-%% number of.ResList
+%% number of resources
 M = 1;
 %% number of classes
 R = size(rAvgTimes,2);
@@ -121,7 +121,7 @@ w = avgTput./(sum(avgTput,2)*ones(1,R));
         stop = false;
         if strcmpi(state,'iter')
             if toc(T0)>MAXTIME
-                disp('Time limit reached. Aborting.\n');
+                fprintf('Time limit reached. Aborting.\n');
                 stop = true;
             end
         end

@@ -1,4 +1,4 @@
-function [resDataDep,sysDataDep] = est_ubr_dependencies(metric)
+function [resDataDep,sysDataDep] = est_res_ubr_dependencies(metric)
 % [resDataDep,sysDataDep] = EST_UBR_DEPENDENCIES(data, resource, class)
 % Returns data dependency matrix for est-ubr
 

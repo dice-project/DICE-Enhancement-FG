@@ -1,4 +1,4 @@
-function meanST = est_ci(metric,flags,dicefg_disp)
+function meanST = est_res_ci(metric,flags,dicefg_disp)
 % CI Complete Information estimation
 %
 % Configuration file fields:
