@@ -5,5 +5,5 @@ if isunix
 elseif ispc
     system('zip .\bin\dicefg-windows.zip bin\dicefg.exe')    
 end
-system('svn commit --non-interactive -m ''$commit_msg''')
+commit_dicefg
 cd bin/
