@@ -44,32 +44,15 @@
     </analysis>
     <analysis algorithm='est-qmle' flags='numServers=1, warmUp=0'>
         <system value='subnetwork1'>
-            <resource value='resource1'>
-                <output>
-                    <parameter type='Class' value='class1' />
-                    <parameter type='Confidence' value='mean' />
-                    <parameter type='UMLParam' value='$redT'/>
-                    <parameter type='UMLParamType' value='hostDemand'/>
-                    <parameter type='UMLInput' value='./tests/test2/model.uml'/>
-                    <parameter type='UMLOutput' value='./tests/test2/model.out'/>
-                </output>
-                <output>
-                    <parameter type='Class' value='class1' />
-                    <parameter type='Confidence' value='lower' />
-                    <parameter type='UMLParam' value='$redT'/>
-                    <parameter type='UMLParamType' value='hostDemand'/>
-                    <parameter type='UMLInput' value='./tests/test2/model.uml'/>
-                    <parameter type='UMLOutput' value='./tests/test2/model.out'/>
-                </output>
-                <output>
-                    <parameter type='Class' value='class1' />
-                    <parameter type='Confidence' value='upper' />
-                    <parameter type='UMLParam' value='$redT'/>
-                    <parameter type='UMLParamType' value='hostDemand'/>
-                    <parameter type='UMLInput' value='./tests/test2/model.uml'/>
-                    <parameter type='UMLOutput' value='./tests/test2/model.out'/>
-                </output>
-            </resource>
+            <output>
+                <parameter type='Resource' value='resource1' />
+                <parameter type='Class' value='class1' />
+                <parameter type='Confidence' value='mean' />
+                <parameter type='UMLParam' value='$redT'/>
+                <parameter type='UMLParamType' value='hostDemand'/>
+                <parameter type='UMLInput' value='./tests/test2/model.uml'/>
+                <parameter type='UMLOutput' value='./tests/test2/model.out'/>
+            </output>
         </system>
     </analysis>
 </fg>
