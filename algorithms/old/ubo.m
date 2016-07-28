@@ -14,7 +14,7 @@ function [demEst,fObjFun] = ubo(data,maxTime)
 % maxTime:      maximum running time (s) for optimization procedure
 %
 % 
-% Copyright (c) 2012-2013, Imperial College London 
+% Copyright (c) 2012-2016, Imperial College London 
 % All rights reserved.
 % This code is released under the 3-Clause BSD License. 
 
@@ -103,9 +103,6 @@ deltaj = cpuUtil;
 w = avgTput./(sum(avgTput,2)*ones(1,R));
 [demEst, fObjFun]=fmincon(@objfun,x0,[],[],[],[],XLB,XUB,[],options);
 
-
-
-
     function f = objfun(x)
         d = repmat(x,N,1);
         epsi = sum(d.*avgTput,2) - cpuUtil;
@@ -126,5 +123,46 @@ w = avgTput./(sum(avgTput,2)*ones(1,R));
             end
         end
     end
+
+end
+
+function [sampInt, cpuUtil, arrTimes, respTimes, avgRespTimes, avgTput]=parseDataFormat(data) 
+% PARSEDATAFORMAT Translates a common data format and returns the individual 
+% variables 
+%
+% [A,B,C,D,E,F] = PARSEDATAFORMAT(H) translates the input data H in the common
+% data format and returns: 
+% A: final timestamps of the sampling intervals (s)
+% B: average CPU utilization on each sampling interval
+% C: timestamps of request arrivals (s)
+% D: response times of each request (s) 
+% E: average response times as observed in each sampling interval (s)
+% F: average throughput in each sampling interval (1/s)
+% 
+% 
+% Copyright (c) 2012-2013, Imperial College London 
+% All rights reserved.
+
+
+% Final timestamps of the sampling intervals - (ms) to (s) 
+sampInt=[0;data{1,end}/1000]; 
+
+% Average CPU utilization on each sampling interval
+cpuUtil=data{2,end};
+
+% Timestamps of request arrivals (ms) to (s)
+arrTimes={data{3,1:(end-1)}};
+for i=1:size(arrTimes,2) 
+    arrTimes{:,i}=arrTimes{:,i}/1000; 
+end
+
+% Response times of each request (s) 
+respTimes={data{4,1:(end-1)}};
+
+% Average response times as observed in each sampling interval (s)
+avgRespTimes=cell2mat({data{5,1:(end-1)}});
+
+% average throughput in each sampling interval (1/s)
+avgTput=cell2mat({data{6,1:(end-1)}});
 
 end
