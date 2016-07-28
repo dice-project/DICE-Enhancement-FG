@@ -11,7 +11,8 @@ maxPop = zeros(1,numClasses);
 
 for r=1:length(metric.ResClassList)
     arvT=metric.ResData{hash_metric('arvT'),hash_data(metric, metric.ResIndex, r)};
-    depT=metric.ResData{hash_metric('depT'),hash_data(metric, metric.ResIndex, r)};    
+    respT=metric.ResData{hash_metric('respT'),hash_data(metric, metric.ResIndex, r)};    
+    depT=arvT+respT;
     state=[ arvT,  ones(size(arvT));
         depT, -ones(size(depT))];
     state=sortrows(state,1);
