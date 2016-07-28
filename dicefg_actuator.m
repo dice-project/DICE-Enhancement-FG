@@ -1,4 +1,4 @@
-function dicefg_actuator(metric, dicefg_disp)
+function metric = dicefg_actuator(metric, dicefg_disp)
 switch metric.Handler
     case 'uml-marte'
         dicefg_disp(2,'Switching to UML MARTE update handler.')

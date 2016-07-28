@@ -24,12 +24,15 @@ while ~isempty(Node)
         end
         subNode0 = Node.getFirstChild;
         while ~isempty(subNode0)
+            if strcmpi(subNode0.getNodeName, 'resource')
+                metric = config_parse_resource(metric,subNode0,dicefg_disp);
+            elseif strcmpi(subNode0.getNodeName, 'system')
+                metric = config_parse_system(metric,Node,dicefg_disp);
+            end
             if strcmp(Node.getNodeName,'estimation')
                 if strcmpi(subNode0.getNodeName, 'resource')
-                    metric = config_parse_resource(metric,subNode0,dicefg_disp);
                     metric = dicefg_handler_res_est(metric, dicefg_disp);
                 elseif strcmpi(subNode0.getNodeName, 'system')
-                    metric = config_parse_system(metric,Node,dicefg_disp);
                     metric = dicefg_handler_sys_est(metric, dicefg_disp);
                 end
             end
@@ -44,7 +47,7 @@ while ~isempty(Node)
                             if strcmp(Node.getNodeName,'fitting')
                                 metric = dicefg_handler_fit(metric, dicefg_disp);
                             end
-                            dicefg_actuator(metric, dicefg_disp);
+                            metric = dicefg_actuator(metric, dicefg_disp);
                         end
                         subNode2 = subNode2.getNextSibling;
                     end
@@ -66,7 +69,6 @@ metric.('Resource')='';
 metric.('Metric')='';
 metric.('Param')='';
 metric.('ParamType')='';
-metric.('InputFile')='';
 metric.('OutputFile')='';
 end
 

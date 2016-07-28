@@ -10,7 +10,7 @@ try
         case 'mean' % do nothing
     end
     dicefg_disp(2,'Reading input UML model');
-    fid  = fopen(metric.InputFile,'r');
+    fid  = fopen(metric.OutputFile,'r');
     f=fread(fid,'*char')';
     fclose(fid);
     dicefg_disp(2,'Updating model');
