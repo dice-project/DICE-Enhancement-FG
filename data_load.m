@@ -16,9 +16,9 @@ else
 end
 metric.('NumResources') = length(metric.ResList);
 metric.('NumClasses') = length(metric.ResClassList);
-switch metric.Technology
-    case 'agnostic'
-        dicefg_disp(2,'Running in technology-agnostic mode.')
-end
+% switch metric.Technology
+%     case 'agnostic'
+%         dicefg_disp(2,'Running in technology-agnostic mode.')
+% end
 dicefg_disp(2,sprintf('Dataset has %d resources and %d classes.',metric.NumResources,metric.NumClasses));
 end

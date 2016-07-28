@@ -5,13 +5,11 @@
     </configuration>
     <dataset>
         <period start='0' end='1492581' />        
-        <parameter type='ResourceList' value='./tests/test2/test-resources.json' />
-        <parameter type='ResourceDataFile' value='./tests/test2/test-resdata.json' />
-        <parameter type='ResourceClassList' value='./tests/test2/test-resclasses.json' />
-        <parameter type='SystemDataFile' value='./tests/test2/test-sysdata.json' />
-        <parameter type='SystemClassList' value='./tests/test2/test-sysclasses.json' />
-        <parameter type='Technology' value='agnostic' />
-        <parameter type='TechnologyInfo' value='' />
+        <file type='ResourceList' path='./tests/test2/test-resources.json' />
+        <file type='ResourceDataFile' path='./tests/test2/test-resdata.json' />
+        <file type='ResourceClassList' path='./tests/test2/test-resclasses.json' />
+        <file type='SystemDataFile' path='./tests/test2/test-sysdata.json' />
+        <file type='SystemClassList' path='./tests/test2/test-sysclasses.json' />
     </dataset>
     <estimation type='est-qmle' flags='warmUp=0'>
         <resource name='resource1' flags='numServers=1'>
@@ -30,5 +28,3 @@
         </resource>
     </fitting>
 </fg>
-
-
