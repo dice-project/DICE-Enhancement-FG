@@ -48,7 +48,7 @@ try
     fprintf(fid,'%s',f);
     fclose(fid);
 catch err
-    error(sprintf('Unexpected error: %s',err.message));
+    error('Unexpected error: %s',err.message);
     exit
 end
 end

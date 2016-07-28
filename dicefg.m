@@ -16,13 +16,13 @@ rootNode = xDoc.getDocumentElement.getChildNodes; % get the <DICE-FG> root
 node = rootNode.getFirstChild;
 while ~isempty(node)
     if strcmp(node.getNodeName, 'configuration')
-        subNode = node.getFirstChild;
-        while ~isempty(subNode)
+        subNode2 = node.getFirstChild;
+        while ~isempty(subNode2)
             %% read all the custom parameters
-            if strcmpi(subNode.getNodeName, 'parameter')
-                configuration.(char(subNode.getAttribute('type'))) = str2num(subNode.getAttribute('value'));
+            if strcmpi(subNode2.getNodeName, 'parameter')
+                configuration.(char(subNode2.getAttribute('type'))) = str2num(subNode2.getAttribute('value'));
             end
-            subNode = subNode.getNextSibling;
+            subNode2 = subNode2.getNextSibling;
         end
         if configuration.Verbose == 0
             dicefg_disp = @dicefg_disp_silent;
@@ -36,13 +36,13 @@ while ~isempty(node)
         end
         dicefg_disp(1,sprintf('FG module - version %s: Copyright 2012-2016 (c) - Imperial College London.',version));
     elseif strcmp(node.getNodeName,'dataset')
-        subNode = node.getFirstChild;
-        while ~isempty(subNode)
+        subNode2 = node.getFirstChild;
+        while ~isempty(subNode2)
             %% read all the custom parameters
-            if strcmpi(subNode.getNodeName, 'parameter')
-                metric.(char(subNode.getAttribute('type'))) = char(subNode.getAttribute('value'));
+            if strcmpi(subNode2.getNodeName, 'parameter')
+                metric.(char(subNode2.getAttribute('type'))) = char(subNode2.getAttribute('value'));
             end
-            subNode = subNode.getNextSibling;
+            subNode2 = subNode2.getNextSibling;
         end
         try
             %% load data
@@ -63,11 +63,11 @@ while ~isempty(node)
             end
             metric.('NumResources') = length(metric.ResList);
             metric.('NumClasses') = length(metric.ResClassList);            
-            dicefg_disp(1,sprintf('Dataset has %d resources and %d classes.',metric.NumResources,metric.NumClasses));
+            dicefg_disp(2,sprintf('Dataset has %d resources and %d classes.',metric.NumResources,metric.NumClasses));
             %% sanitize data
             [nRows,nColumns] = size(metric.ResData);
             if nColumns ~= (metric.NumClasses+1)*metric.NumResources
-                error('Input files are inconsistent, not enough classes or resources in dataset');
+                error('Input files are inconsistent, not enough classes or resources in dataset.');
                 exit
             end
             if nRows<expectednRows
@@ -96,20 +96,20 @@ while ~isempty(node)
             end
         catch err
             err.message
-            error(sprintf('Cannot load resource data file: %s',metric.ResourceDataFile));
+            error('Cannot load resource data file: %s.',metric.ResourceDataFile);
             exit
         end
     elseif strcmp(node.getNodeName,'resource')
         metric = setMetricDefaults(metric);
         metric.('Resource') = char(node.getAttribute('value'));
         %% run the analysis for the resource
-        dicefg_disp(1,sprintf('Processing resource "%s"',metric.Resource));
+        dicefg_disp(1,sprintf('Processing resource "%s".',metric.Resource));
         metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));
-        node0 = node.getFirstChild;
-        while ~isempty(node0)
-            if strcmpi(node0.getNodeName, 'algorithm')
-                metric.('Method') = char(node0.getAttribute('value'));
-                metric.('Flags') = char(node0.getAttribute('flags'));
+        subNode0 = node.getFirstChild;
+        while ~isempty(subNode0)
+            if strcmpi(subNode0.getNodeName, 'algorithm')
+                metric.('Method') = char(subNode0.getAttribute('value'));
+                metric.('Flags') = char(subNode0.getAttribute('flags'));
                 
                 if strfind(metric.Method,'est')==1
                     %% Estimation.Methods
@@ -117,16 +117,16 @@ while ~isempty(node)
                     metric = dicefg_handler_est(metric, dicefg_disp);
                 end
                 
-                subNode0 = node0.getFirstChild;
-                while ~isempty(subNode0)
-                    if strcmpi(subNode0.getNodeName, 'output')
-                        subNode = subNode0.getFirstChild;
-                        while ~isempty(subNode)
+                subNode1 = subNode0.getFirstChild;
+                while ~isempty(subNode1)
+                    if strcmpi(subNode1.getNodeName, 'output')
+                        subNode2 = subNode1.getFirstChild;
+                        while ~isempty(subNode2)
                             %% read all the custom parameters
-                            if strcmpi(subNode.getNodeName, 'parameter')
-                                metric.(char(subNode.getAttribute('type'))) = char(subNode.getAttribute('value'));
+                            if strcmpi(subNode2.getNodeName, 'parameter')
+                                metric.(char(subNode2.getAttribute('type'))) = char(subNode2.getAttribute('value'));
                             end
-                            subNode = subNode.getNextSibling;
+                            subNode2 = subNode2.getNextSibling;
                         end
                         metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.Class,X),metric.ResClassList));
                         
@@ -151,10 +151,10 @@ while ~isempty(node)
                         dicefg_disp(2,sprintf('Saving metric "%s" at "%s"',metric.Class,metric.Resource));
                         dicefg_handler_umlupdate(metric, dicefg_disp);
                     end
-                    subNode0 = subNode0.getNextSibling;
+                    subNode1 = subNode1.getNextSibling;
                 end
             end
-            node0 = node0.getNextSibling;
+            subNode0 = subNode0.getNextSibling;
         end
     end
     node = node.getNextSibling;

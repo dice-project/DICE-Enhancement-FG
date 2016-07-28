@@ -45,7 +45,7 @@ try
             end
     end
 catch err
-    error(sprintf('Unexpected error (%s): %s', metric.Method, err.message));
+    error('Unexpected error (%s): %s', metric.Method, err.message);
     exit
 end
 dicefg_disp(1,sprintf('Fitting completed in %.6f seconds.',toc(t_run)));
