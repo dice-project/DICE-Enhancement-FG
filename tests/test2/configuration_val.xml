@@ -6,39 +6,41 @@
     <dataset>
         <parameter type='StartTime' value='0' />
         <parameter type='EndTime' value='1492581' />
-        <parameter type='ResourceList' value='./regression/validation/val-resources.json' />
-        <parameter type='ResourceDataFile' value='./regression/validation/val-resdata.json' />
-        <parameter type='ResourceClassList' value='./regression/validation/val-resclasses.json' />
-        <parameter type='SystemDataFile' value='./regression/validation/val-sysdata.json' />
-        <parameter type='SystemClassList' value='./regression/validation/val-sysclasses.json' />
+        <parameter type='ResourceList' value='./tests/test2/test-resources.json' />
+        <parameter type='ResourceDataFile' value='./tests/test2/test-resdata.json' />
+        <parameter type='ResourceClassList' value='./tests/test2/test-resclasses.json' />
+        <parameter type='SystemDataFile' value='./tests/test2/test-sysdata.json' />
+        <parameter type='SystemClassList' value='./tests/test2/test-sysclasses.json' />
         <parameter type='Technology' value='agnostic' />
         <parameter type='TechnologyInfo' value='' />
     </dataset>
-    <analysis algorithm='est-res-qmle' flags='numServers=1, warmUp=0'>
+    <analysis>
+        <parameter type='Algorithm' value='est-res-qmle' />
+        <parameter type='Flags' value='numServers=1, warmUp=0' />
         <resource value='resource1'>
             <output>
                 <parameter type='Class' value='class1' />
                 <parameter type='Confidence' value='mean' />
                 <parameter type='UMLParam' value='$redT'/>
                 <parameter type='UMLParamType' value='hostDemand'/>
-                <parameter type='UMLInput' value='./regression/validation/model.uml'/>
-                <parameter type='UMLOutput' value='./regression/validation/model.out'/>
+                <parameter type='UMLInput' value='./tests/test2/model.uml'/>
+                <parameter type='UMLOutput' value='./tests/test2/model.out'/>
             </output>
             <output>
                 <parameter type='Class' value='class1' />
                 <parameter type='Confidence' value='lower' />
                 <parameter type='UMLParam' value='$redT'/>
                 <parameter type='UMLParamType' value='hostDemand'/>
-                <parameter type='UMLInput' value='./regression/validation/model.uml'/>
-                <parameter type='UMLOutput' value='./regression/validation/model.out'/>
+                <parameter type='UMLInput' value='./tests/test2/model.uml'/>
+                <parameter type='UMLOutput' value='./tests/test2/model.out'/>
             </output>
             <output>
                 <parameter type='Class' value='class1' />
                 <parameter type='Confidence' value='upper' />
                 <parameter type='UMLParam' value='$redT'/>
                 <parameter type='UMLParamType' value='hostDemand'/>
-                <parameter type='UMLInput' value='./regression/validation/model.uml'/>
-                <parameter type='UMLOutput' value='./regression/validation/model.out'/>
+                <parameter type='UMLInput' value='./tests/test2/model.uml'/>
+                <parameter type='UMLOutput' value='./tests/test2/model.out'/>
             </output>
         </resource>
         <resource value='resource1'>
@@ -47,24 +49,24 @@
                 <parameter type='Confidence' value='mean' />
                 <parameter type='UMLParam' value='$redT'/>
                 <parameter type='UMLParamType' value='hostDemand'/>
-                <parameter type='UMLInput' value='./regression/validation/model.uml'/>
-                <parameter type='UMLOutput' value='./regression/validation/model.out'/>
+                <parameter type='UMLInput' value='./tests/test2/model.uml'/>
+                <parameter type='UMLOutput' value='./tests/test2/model.out'/>
             </output>
             <output>
                 <parameter type='Class' value='class2' />
                 <parameter type='Confidence' value='lower' />
                 <parameter type='UMLParam' value='$redT'/>
                 <parameter type='UMLParamType' value='hostDemand'/>
-                <parameter type='UMLInput' value='./regression/validation/model.uml'/>
-                <parameter type='UMLOutput' value='./regression/validation/model.out'/>
+                <parameter type='UMLInput' value='./tests/test2/model.uml'/>
+                <parameter type='UMLOutput' value='./tests/test2/model.out'/>
             </output>
             <output>
                 <parameter type='Class' value='class2' />
                 <parameter type='Confidence' value='upper' />
                 <parameter type='UMLParam' value='$redT'/>
                 <parameter type='UMLParamType' value='hostDemand'/>
-                <parameter type='UMLInput' value='./regression/validation/model.uml'/>
-                <parameter type='UMLOutput' value='./regression/validation/model.out'/>
+                <parameter type='UMLInput' value='./tests/test2/model.uml'/>
+                <parameter type='UMLOutput' value='./tests/test2/model.out'/>
             </output>
         </resource>
     </analysis>
