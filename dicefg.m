@@ -9,13 +9,7 @@ Node = rootNode.getFirstChild;
 while ~isempty(Node)
     if strcmp(Node.getNodeName, 'configuration')
         [configuration] = config_parse_configuration(Node.getFirstChild);
-        if configuration.Verbose == 0
-            dicefg_disp = @dicefg_disp_silent;
-        elseif configuration.Verbose == 2
-            dicefg_disp = @dicefg_disp_debug;
-        else % use normal in case of input errors
-            dicefg_disp = @dicefg_disp_normal;
-        end        
+        dicefg_disp = setup_display(configuration);
         dicefg_disp(1,sprintf('FG module - version %s - copyright 2012-2016 (c) - Imperial College London.',version));
     elseif strcmp(Node.getNodeName,'dataset')
         metric = config_parse_dataset(Node.getFirstChild,dicefg_disp);
@@ -74,4 +68,14 @@ metric.('Param')='';
 metric.('ParamType')='';
 metric.('InputFile')='';
 metric.('OutputFile')='';
+end
+
+function dicefg_disp = setup_display(configuration)
+if configuration.Verbose == 0
+    dicefg_disp = @dicefg_disp_silent;
+elseif configuration.Verbose == 2
+    dicefg_disp = @dicefg_disp_debug;
+else % use normal in case of input errors
+    dicefg_disp = @dicefg_disp_normal;
+end
 end

@@ -1,4 +1,4 @@
-function dicefg_handler_umlupdate(metric, dicefg_disp)
+function dicefg_handler_umlmarte(metric, dicefg_disp)
 dicefg_disp(2,sprintf('Updating context parameter %s in UML model.',metric.Param));
 try
     dicefg_disp(2,'Applying confidence setting.');
@@ -48,10 +48,10 @@ try
             end
         end
         f = strrep(f,expression,replace);
-        dicefg_disp(1,sprintf('Writing UML-MARTE hostDemand (contextParam: %s): %s',metric.Param,replace));
+        dicefg_disp(1,sprintf('Writing UML MARTE hostDemand (contextParam: %s): %s',metric.Param,replace));
         dicefg_disp(2,sprintf('Expression: %s\nReplaced: %s',expression,replace));
     end
-    dicefg_disp(2,'Writing output UML-MARTE model');
+    dicefg_disp(2,'Writing output UML MARTE model');
     fid  = fopen(metric.OutputFile,'w');
     fprintf(fid,'%s',f);
     fclose(fid);

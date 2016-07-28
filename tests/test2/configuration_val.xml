@@ -14,7 +14,7 @@
         <parameter type='TechnologyInfo' value='' />
     </dataset>
     <estimation type='est-qmle' flags='warmUp=0'>
-        <resource value='resource1' flags='numServers=1'>
+        <resource name='resource1' flags='numServers=1'>
             <output handler='uml-marte' input='./tests/test2/model.uml' output='./tests/test2/model.out'>
                 <metric class='class1' confidence='mean' param='$redT' type='hostDemand' />
                 <metric class='class1' confidence='upper' param='$redT' type='hostDemand' />
@@ -23,9 +23,9 @@
         </resource>
     </estimation>
     <fitting type='fit-norm' flags=''>
-        <resource value='resource1' flags=''>
+        <resource name='resource1' flags=''>
             <output handler='uml-marte' input='./tests/test2/model.uml' output='./tests/test2/model.out'>
-                <metric value='qlen' class='class1' confidence='mean' param='$redT' paramType='hostDemand' />
+                <metric name='qlen' class='class1' confidence='mean' param='$redT' type='hostDemand' />
             </output>
         </resource>
     </fitting>

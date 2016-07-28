@@ -1,5 +1,5 @@
 function metric = config_parse_system(metric,Node,dicefg_disp)
-metric.('System') = char(Node.getAttribute('value'));
+metric.('System') = char(Node.getAttribute('name'));
 resFlags = char(Node.getAttribute('flags'));
 if length(metric.Flags) > 0 && length(resFlags) > 0
     metric.('Flags') = sprintf('%s, %s',metric.Flags,resFlags);

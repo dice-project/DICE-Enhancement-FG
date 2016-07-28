@@ -1,5 +1,5 @@
 function metric = config_parse_metric(metric,Node,dicefg_disp)
-metric.('Metric') = char(Node.getAttribute('value'));
+metric.('Metric') = char(Node.getAttribute('name'));
 metric.('Class') = char(Node.getAttribute('class'));
 metric.('Confidence') = char(Node.getAttribute('confidence'));
 metric.('Param') = char(Node.getAttribute('param'));
