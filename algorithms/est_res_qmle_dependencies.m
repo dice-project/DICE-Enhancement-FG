@@ -3,7 +3,7 @@ function [resDataDep,sysDataDep] = est_res_qmle_dependencies(metric)
 % Returns data dependency matrix for est-qmle
 
 resDataDep = zeros(size(metric.ResData));
-for r=1:length(metric.ResClassList)
+for r=1:metric.NumClasses
     % require average queue-length for each class at each resource, except aggr
     resDataDep(hash_metric('qlenAvg'),hash_data(metric,metric.ResIndex,r)) = 1;
     resDataDep(hash_metric('ts'),hash_data(metric,metric.ResIndex,r)) = 1;

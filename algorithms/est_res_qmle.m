@@ -1,13 +1,17 @@
 function [theta,confint] = est_res_qmle( metric,flags,dicefg_disp )
 [extDelay, jobPop] = est_res_extdelay(metric,flags,dicefg_disp);
-qlenAvg = cell2mat({metric.ResData{hash_metric('qlenAvg'),hash_data(metric, metric.ResIndex, 1:length(metric.ResClassList))}});
-% determine probability of each sampling period
-weightsTS = diff(cell2mat({metric.ResData{hash_metric('ts'),hash_data(metric, metric.ResIndex, 1:length(metric.ResClassList))}}),1);
-weightsTS = weightsTS./repmat(sum(weightsTS,1),size(weightsTS,1),1);
-avgQlen = sum(weightsTS.*qlenAvg,1);
 
-theta = zeros(1,length(metric.ResClassList));
-for j = 1:length(metric.ResClassList)
+% determine probability of each sampling period
+for r=1:metric.NumClasses
+    weightTS{r} = diff(get_data(metric,'ts', metric.ResIndex, r),1);
+    weightTS{r} = weightTS{r}./sum(weightTS{r});
+    % obtain overall average by weighted sum of the avg tput and avg rt samples
+    qlenAvg(r) = sum(weightTS{r}.*get_data(metric,'qlenAvg', metric.ResIndex, r),1);
+    avgQlen(r) = sum(weightTS{r}.*qlenAvg(r),1);
+end
+
+theta = zeros(1,metric.NumClasses);
+for j = 1:metric.NumClasses
     theta(j) = avgQlen(j)/(jobPop(j)-avgQlen(j)) * extDelay(j)/(1+sum(avgQlen)-avgQlen(j)/jobPop(j));
 end
 

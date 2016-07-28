@@ -5,17 +5,15 @@ function demEst = est_res_ubr(metric, flags, dicefg_disp)
 % All rights reserved.
 % This code is released under the 3-Clause BSD License.
 
-cpuUtil = metric.ResData{hash_metric('util'),hash_data(metric, metric.ResIndex, 0)}(:);
-avgTput = cell2mat({metric.ResData{hash_metric('tputAvg'),hash_data(metric, metric.ResIndex, 1:length(metric.ResClassList))}});
 nServers = flags.numServers;
+cpuUtil = get_data(metric,'util', metric.ResIndex, 0);
 
-nanSet = isnan(cpuUtil);
-if sum(nanSet) > 0
-    dicefg_disp(2,'NaN values found for CPU Utilization. Removing NaN values.');
-    cpuUtil = cpuUtil(nanSet == 0);
-    avgTput = avgTput(nanSet == 0,:);
+% determine probability of each sampling period
+for r=1:metric.NumClasses
+    % obtain average throughput samples
+    avgTput{r} = get_data(metric,'tputAvg', metric.ResIndex, r);
 end
 
 cpuUtil = cpuUtil * nServers;
-demEst = lsqnonneg(avgTput, cpuUtil);
+demEst = lsqnonneg(cell2mat(avgTput), cpuUtil);
 end

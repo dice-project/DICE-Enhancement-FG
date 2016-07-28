@@ -6,12 +6,12 @@ function maxPop = est_res_max_population(metric,flags,dicefg_disp)
 % All rights reserved.
 % This code is released under the 3-Clause BSD License.
 
-numClasses = length(metric.ResClassList);
+numClasses = metric.NumClasses;
 maxPop = zeros(1,numClasses);
 
-for r=1:length(metric.ResClassList)
-    arvT=metric.ResData{hash_metric('arvT'),hash_data(metric, metric.ResIndex, r)};
-    respT=metric.ResData{hash_metric('respT'),hash_data(metric, metric.ResIndex, r)};    
+for r=1:metric.NumClasses    
+    arvT = get_data(metric,'arvT', metric.ResIndex, r);
+    respT = get_data(metric,'respT', metric.ResIndex, r);    
     depT=arvT+respT;
     state=[ arvT,  ones(size(arvT));
         depT, -ones(size(depT))];

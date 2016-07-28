@@ -12,8 +12,8 @@ function meanST = est_res_ci(metric,flags,dicefg_disp)
 
 %other parameters
 
-arvT={metric.ResData{hash_metric('arvT'),hash_data(metric, metric.ResIndex, 1:length(metric.ResClassList))}};
-respT={metric.ResData{hash_metric('respT'),hash_data(metric, metric.ResIndex, 1:length(metric.ResClassList))}};
+arvT = get_data(metric,'arvT', metric.ResIndex, 1:metric.NumClasses); 
+respT = get_data(metric,'respT', metric.ResIndex, 1:metric.NumClasses); 
 V = flags.numServers;
 warmUp = flags.warmUp;
 numExp = 1;

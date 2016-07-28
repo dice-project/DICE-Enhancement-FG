@@ -3,7 +3,7 @@ function [resDataDep,sysDataDep] = est_res_extdelay_dependencies(metric)
 % Returns data dependency matrix for est-ci
 
 resDataDep = zeros(size(metric.ResData));
-for r=1:length(metric.ResClassList)
+for r=1:metric.NumClasses
     resDataDep(hash_metric('ts'),hash_data(metric,metric.ResIndex,r)) = 1;
     resDataDep(hash_metric('tputAvg'),hash_data(metric,metric.ResIndex,r)) = 1;
     resDataDep(hash_metric('respTAvg'),hash_data(metric,metric.ResIndex,r)) = 1;

@@ -2,7 +2,7 @@
 function dicefg(configFile)
 % put a java.opts file in  mcr_root/<ver>/bin/<arch> with -Xmx2096m
 warning off
-version = '2.2.0';
+version = '2.3.0';
 
 % Add subfolders
 %addpath(genpath(pwd));
@@ -61,10 +61,12 @@ while ~isempty(node)
                 error('Only .mat data files are supported in the current version.')
                 exit
             end
-            dicefg_disp(1,sprintf('Dataset has %d resources and %d classes.',length(metric.ResList),length(metric.ResClassList)));
+            metric.('NumResources') = length(metric.ResList);
+            metric.('NumClasses') = length(metric.ResClassList);            
+            dicefg_disp(1,sprintf('Dataset has %d resources and %d classes.',metric.NumResources,metric.NumClasses));
             %% sanitize data
             [nRows,nColumns] = size(metric.ResData);
-            if nColumns ~= (length(metric.ResClassList)+1)*length(metric.ResList)
+            if nColumns ~= (metric.NumClasses+1)*metric.NumResources
                 error('Input files are inconsistent, not enough classes or resources in dataset');
                 exit
             end
@@ -142,7 +144,7 @@ while ~isempty(node)
                             case 'lower'
                                 metric.Result = metric.ConfInt(:,1);
                             case 'mean' % do nothing
-                        end                        
+                        end
                         
                         %% DICE-FG Updater
                         dicefg_disp(2,'Switching to UML update handler.')

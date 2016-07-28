@@ -3,7 +3,7 @@ function [resDataDep,sysDataDep] = est_ci_dependencies(metric)
 % Returns data dependency matrix for est-ci
 
 resDataDep = zeros(size(metric.ResData));
-for r=1:length(metric.ResClassList)
+for r=1:metric.NumClasses
     % require arrival timestamp for each class, except aggr
     resDataDep(hash_metric('arvT'),hash_data(metric,metric.ResIndex,r))=1;
     
