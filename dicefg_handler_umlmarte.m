@@ -1,13 +1,21 @@
 function dicefg_handler_umlupdate(metric, dicefg_disp)
-dicefg_disp(2,sprintf('Updating context parameter %s in UML model.',metric.UMLParam));
+dicefg_disp(2,sprintf('Updating context parameter %s in UML model.',metric.Param));
 try
+    dicefg_disp(2,'Applying confidence setting.');
+    switch metric.Confidence
+        case 'upper'
+            metric.Result = metric.ConfInt(:,2);
+        case 'lower'
+            metric.Result = metric.ConfInt(:,1);
+        case 'mean' % do nothing
+    end
     dicefg_disp(2,'Reading input UML model');
-    fid  = fopen(metric.UMLInput,'r');
+    fid  = fopen(metric.InputFile,'r');
     f=fread(fid,'*char')';
     fclose(fid);
     dicefg_disp(2,'Updating model');
-    if strcmpi(metric.UMLParamType,'hostDemand')==1
-        expression = sprintf('expr=%s',metric.UMLParam);
+    if strcmpi(metric.ParamType,'hostDemand')==1
+        expression = sprintf('expr=%s',metric.Param);
         if strfind(metric.Algorithm,'est')==1
             if length(metric.Result)>1
                 replace = sprintf('expr=exp(mean=%d)',metric.Result(metric.ClassIndex));
@@ -40,11 +48,11 @@ try
             end
         end
         f = strrep(f,expression,replace);
-        dicefg_disp(1,sprintf('Written UML hostDemand (contextParam: %s): %s',metric.UMLParam,replace));
+        dicefg_disp(1,sprintf('Writing UML-MARTE hostDemand (contextParam: %s): %s',metric.Param,replace));
         dicefg_disp(2,sprintf('Expression: %s\nReplaced: %s',expression,replace));
     end
-    dicefg_disp(2,'Writing output UML model');
-    fid  = fopen(metric.UMLOutput,'w');
+    dicefg_disp(2,'Writing output UML-MARTE model');
+    fid  = fopen(metric.OutputFile,'w');
     fprintf(fid,'%s',f);
     fclose(fid);
 catch err
