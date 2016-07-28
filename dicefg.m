@@ -108,7 +108,7 @@ while ~isempty(node)
                 
                 if strfind(metric.Algorithm,'est-')==1
                     dicefg_disp(2,'Switching to resource-level estimation method handler.')
-                    metric = dicefg_handler_resest(metric, dicefg_disp);
+                    metric = dicefg_handler_res_est(metric, dicefg_disp);
                 end
                 
                 subNode1 = subNode0.getFirstChild;
