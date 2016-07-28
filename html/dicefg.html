@@ -1,0 +1,403 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>dicefg</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-07-28"><meta name="DC.source" content="dicefg.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#3">Data loading phase</a></li><li><a href="#4">Data validation phase</a></li><li><a href="#6">Resource-level analysis</a></li><li><a href="#9">Model updating phase</a></li></ul></div><pre class="codeinput"><span class="keyword">function</span> dicefg(configFile)
+<span class="comment">% DICEFG(configFile)</span>
+<span class="comment">% Run DICE-FG tool using the specified configuration XML file.</span>
+
+version = <span class="string">'2.3.0'</span>;
+
+expectednRows = 11; <span class="comment">% expected number of rows in data file</span>
+
+xDoc = xmlread(configFile);
+rootNode = xDoc.getDocumentElement.getChildNodes; <span class="comment">% get the &lt;DICE-FG&gt; root</span>
+node = rootNode.getFirstChild;
+<span class="keyword">while</span> ~isempty(node)
+    <span class="keyword">if</span> strcmp(node.getNodeName, <span class="string">'configuration'</span>)
+        subNode2 = node.getFirstChild;
+        <span class="keyword">while</span> ~isempty(subNode2)
+            <span class="comment">% read all the custom parameters</span>
+            <span class="keyword">if</span> strcmpi(subNode2.getNodeName, <span class="string">'parameter'</span>)
+                configuration.(char(subNode2.getAttribute(<span class="string">'type'</span>))) = str2num(subNode2.getAttribute(<span class="string">'value'</span>));
+            <span class="keyword">end</span>
+            subNode2 = subNode2.getNextSibling;
+        <span class="keyword">end</span>
+        <span class="keyword">if</span> configuration.Verbose == 0
+            dicefg_disp = @dicefg_disp_silent;
+        <span class="keyword">elseif</span> configuration.Verbose == 1
+            dicefg_disp = @dicefg_disp_normal;
+        <span class="keyword">elseif</span> configuration.Verbose == 2
+            dicefg_disp = @dicefg_disp_debug;
+        <span class="keyword">else</span>
+            error(<span class="string">'Verbose level must be either 0 (silent), 1 (normal) or 2 (debug)'</span>);
+            exit
+        <span class="keyword">end</span>
+        dicefg_disp(1,sprintf(<span class="string">'FG module - version %s: Copyright 2012-2016 (c) - Imperial College London.'</span>,version));
+    <span class="keyword">elseif</span> strcmp(node.getNodeName,<span class="string">'dataset'</span>)
+</pre><pre class="codeinput">        subNode2 = node.getFirstChild;
+        <span class="keyword">while</span> ~isempty(subNode2)
+            <span class="comment">% read all the custom parameters</span>
+            <span class="keyword">if</span> strcmpi(subNode2.getNodeName, <span class="string">'parameter'</span>)
+                metric.(char(subNode2.getAttribute(<span class="string">'type'</span>))) = char(subNode2.getAttribute(<span class="string">'value'</span>));
+            <span class="keyword">end</span>
+            subNode2 = subNode2.getNextSibling;
+        <span class="keyword">end</span>
+        <span class="keyword">try</span>
+</pre><h2>Data loading phase<a name="3"></a></h2><pre class="codeinput">            [filePath,fileName,fileExt] = fileparts(metric.ResourceDataFile);
+            <span class="keyword">if</span> strcmpi(fileExt,<span class="string">'.mat'</span>)
+                dicefg_disp(1,<span class="string">'Loading resource data (mat format).'</span>);
+                loadedCell = load(metric.ResourceDataFile,<span class="string">'resdata'</span>); metric.ResData=loadedCell.resdata;
+                loadedCell = load(metric.SystemDataFile,<span class="string">'sysdata'</span>); metric.SysData=loadedCell.sysdata;
+                loadedCell = load(metric.ResourceClassList,<span class="string">'classes'</span>); metric.ResClassList=loadedCell.resclasses;
+                loadedCell = load(metric.ResourceList,<span class="string">'resources'</span>); metric.ResList=loadedCell.resources;
+            <span class="keyword">elseif</span> strcmpi(fileExt,<span class="string">'.json'</span>)
+                dicefg_disp(1,<span class="string">'Loading resource data (JSON format).'</span>);
+                fileName = strrep(fileName,<span class="string">'-resdata'</span>,<span class="string">''</span>);
+                [metric.ResData,metric.SysData,metric.ResList,metric.ResClassList]=json2fg(filePath,fileName);
+            <span class="keyword">else</span>
+                error(<span class="string">'Only .mat data files are supported in the current version.'</span>)
+                exit
+            <span class="keyword">end</span>
+            metric.(<span class="string">'NumResources'</span>) = length(metric.ResList);
+            metric.(<span class="string">'NumClasses'</span>) = length(metric.ResClassList);
+            <span class="keyword">switch</span> metric.Technology
+                <span class="keyword">case</span> <span class="string">'hadoop'</span>
+                    dicefg_disp(2,<span class="string">'Running in technology-specific mode: Apache Hadoop dataset.'</span>)
+                    dicefg_disp(1,<span class="string">'Loading Apache Hadoop information.'</span>)
+                    <span class="comment">% todo</span>
+                <span class="keyword">case</span> <span class="string">'spark'</span>
+                    dicefg_disp(2,<span class="string">'Running in technology-specific mode: Apache Spark dataset.'</span>)
+                    dicefg_disp(1,<span class="string">'Loading Apache Spark information.'</span>)
+                    <span class="comment">% todo</span>
+                <span class="keyword">case</span> <span class="string">'storm'</span>
+                    dicefg_disp(2,<span class="string">'Running in technology-specific mode: Apache Storm dataset.'</span>)
+                    dicefg_disp(1,<span class="string">'Loading Apache Storm information.'</span>)
+                    <span class="comment">% todo</span>
+                <span class="keyword">case</span> <span class="string">'agnostic'</span>
+                    dicefg_disp(2,<span class="string">'Running in technology-agnostic mode.'</span>)
+            <span class="keyword">end</span>
+            dicefg_disp(2,sprintf(<span class="string">'Dataset has %d resources and %d classes.'</span>,metric.NumResources,metric.NumClasses));
+</pre><h2>Data validation phase<a name="4"></a></h2><pre class="codeinput">            [nRows,nColumns] = size(metric.ResData);
+            <span class="keyword">if</span> nColumns ~= (metric.NumClasses+1)*metric.NumResources
+                error(<span class="string">'Input files are inconsistent, not enough classes or resources in dataset.'</span>);
+                exit
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> nRows&lt;expectednRows
+                dicefg_disp(0,<span class="string">'Data does not include all rows. Adding empty rows.'</span>)
+                <span class="keyword">for</span> i=nRows+1:expectednRows
+                    <span class="keyword">for</span> j=1:nColumns
+                        metric.ResData{i,j}=[];
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+</pre><pre class="codeinput">        <span class="keyword">catch</span> err
+            err.message
+            error(<span class="string">'Cannot load resource data file: %s.'</span>,metric.ResourceDataFile);
+            exit
+        <span class="keyword">end</span>
+</pre><h2>Resource-level analysis<a name="6"></a></h2><pre class="codeinput">    <span class="keyword">elseif</span> strcmp(node.getNodeName,<span class="string">'resource'</span>)
+        metric = setMetricDefaults(metric);
+        metric.(<span class="string">'Resource'</span>) = char(node.getAttribute(<span class="string">'value'</span>));
+        dicefg_disp(1,sprintf(<span class="string">'Processing resource "%s".'</span>,metric.Resource));
+        metric.(<span class="string">'ResIndex'</span>) = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));
+        subNode0 = node.getFirstChild;
+        <span class="keyword">while</span> ~isempty(subNode0)
+            <span class="keyword">if</span> strcmpi(subNode0.getNodeName, <span class="string">'algorithm'</span>)
+                metric.(<span class="string">'Method'</span>) = char(subNode0.getAttribute(<span class="string">'value'</span>));
+                metric.(<span class="string">'Flags'</span>) = char(subNode0.getAttribute(<span class="string">'flags'</span>));
+
+                <span class="keyword">if</span> strfind(metric.Method,<span class="string">'est'</span>)==1
+                    dicefg_disp(2,<span class="string">'Switching to estimation method handler.'</span>)
+                    metric = dicefg_handler_est(metric, dicefg_disp);
+                <span class="keyword">end</span>
+
+                subNode1 = subNode0.getFirstChild;
+                <span class="keyword">while</span> ~isempty(subNode1)
+                    <span class="keyword">if</span> strcmpi(subNode1.getNodeName, <span class="string">'output'</span>)
+</pre><pre class="codeinput">                        subNode2 = subNode1.getFirstChild;
+                        <span class="keyword">while</span> ~isempty(subNode2)
+                            <span class="comment">% read all the custom parameters</span>
+                            <span class="keyword">if</span> strcmpi(subNode2.getNodeName, <span class="string">'parameter'</span>)
+                                metric.(char(subNode2.getAttribute(<span class="string">'type'</span>))) = char(subNode2.getAttribute(<span class="string">'value'</span>));
+                            <span class="keyword">end</span>
+                            subNode2 = subNode2.getNextSibling;
+                        <span class="keyword">end</span>
+                        metric.(<span class="string">'ClassIndex'</span>) = find(cellfun(@(X)strcmpi(metric.Class,X),metric.ResClassList));
+
+                        <span class="keyword">if</span> strfind(metric.Method,<span class="string">'fit'</span>)==1
+                            dicefg_disp(2,<span class="string">'Switching to fitting method handler.'</span>)
+                            metric = dicefg_handler_fit(metric, dicefg_disp);
+                        <span class="keyword">end</span>
+
+                        dicefg_disp(2,<span class="string">'Applying confidence setting.'</span>);
+                        <span class="keyword">switch</span> metric.Confidence
+                            <span class="keyword">case</span> <span class="string">'upper'</span>
+                                metric.Result = metric.ConfInt(:,2);
+                            <span class="keyword">case</span> <span class="string">'lower'</span>
+                                metric.Result = metric.ConfInt(:,1);
+                            <span class="keyword">case</span> <span class="string">'mean'</span> <span class="comment">% do nothing</span>
+                        <span class="keyword">end</span>
+</pre><h2>Model updating phase<a name="9"></a></h2><pre class="codeinput">                        dicefg_disp(2,<span class="string">'Switching to UML update handler.'</span>)
+                        dicefg_disp(2,sprintf(<span class="string">'Saving metric "%s" at "%s"'</span>,metric.Class,metric.Resource));
+                        dicefg_handler_umlupdate(metric, dicefg_disp);
+</pre><pre class="codeinput">                    <span class="keyword">end</span>
+                    subNode1 = subNode1.getNextSibling;
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            subNode0 = subNode0.getNextSibling;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    node = node.getNextSibling;
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> metric=setMetricDefaults(metric)
+metric.(<span class="string">'Confidence'</span>)=<span class="string">'mean'</span>;
+metric.(<span class="string">'Flags'</span>)=<span class="string">''</span>;
+metric.(<span class="string">'Class'</span>)=<span class="string">''</span>;
+metric.(<span class="string">'Resource'</span>)=<span class="string">''</span>;
+metric.(<span class="string">'Metric'</span>)=<span class="string">''</span>;
+metric.(<span class="string">'UMLParam'</span>)=<span class="string">''</span>;
+metric.(<span class="string">'UMLParamType'</span>)=<span class="string">''</span>;
+metric.(<span class="string">'UMLInput'</span>)=<span class="string">''</span>;
+metric.(<span class="string">'UMLOutput'</span>)=<span class="string">''</span>;
+<span class="keyword">end</span>
+</pre><pre class="codeoutput error">Not enough input arguments.
+
+Error in dicefg (line 9)
+xDoc = xmlread(configFile);
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function dicefg(configFile)
+% DICEFG(configFile)
+% Run DICE-FG tool using the specified configuration XML file.
+
+version = '2.3.0';
+
+expectednRows = 11; % expected number of rows in data file
+
+xDoc = xmlread(configFile);
+rootNode = xDoc.getDocumentElement.getChildNodes; % get the <DICE-FG> root
+node = rootNode.getFirstChild;
+while ~isempty(node)
+    if strcmp(node.getNodeName, 'configuration')
+        subNode2 = node.getFirstChild;
+        while ~isempty(subNode2)
+            % read all the custom parameters
+            if strcmpi(subNode2.getNodeName, 'parameter')
+                configuration.(char(subNode2.getAttribute('type'))) = str2num(subNode2.getAttribute('value'));
+            end
+            subNode2 = subNode2.getNextSibling;
+        end
+        if configuration.Verbose == 0
+            dicefg_disp = @dicefg_disp_silent;
+        elseif configuration.Verbose == 1
+            dicefg_disp = @dicefg_disp_normal;
+        elseif configuration.Verbose == 2
+            dicefg_disp = @dicefg_disp_debug;
+        else
+            error('Verbose level must be either 0 (silent), 1 (normal) or 2 (debug)');
+            exit
+        end
+        dicefg_disp(1,sprintf('FG module - version %s: Copyright 2012-2016 (c) - Imperial College London.',version));
+    elseif strcmp(node.getNodeName,'dataset')
+        subNode2 = node.getFirstChild;
+        while ~isempty(subNode2)
+            % read all the custom parameters
+            if strcmpi(subNode2.getNodeName, 'parameter')
+                metric.(char(subNode2.getAttribute('type'))) = char(subNode2.getAttribute('value'));
+            end
+            subNode2 = subNode2.getNextSibling;
+        end
+        try
+            %% Data loading phase
+            [filePath,fileName,fileExt] = fileparts(metric.ResourceDataFile);
+            if strcmpi(fileExt,'.mat')
+                dicefg_disp(1,'Loading resource data (mat format).');
+                loadedCell = load(metric.ResourceDataFile,'resdata'); metric.ResData=loadedCell.resdata;
+                loadedCell = load(metric.SystemDataFile,'sysdata'); metric.SysData=loadedCell.sysdata;
+                loadedCell = load(metric.ResourceClassList,'classes'); metric.ResClassList=loadedCell.resclasses;
+                loadedCell = load(metric.ResourceList,'resources'); metric.ResList=loadedCell.resources;
+            elseif strcmpi(fileExt,'.json')
+                dicefg_disp(1,'Loading resource data (JSON format).');
+                fileName = strrep(fileName,'-resdata','');
+                [metric.ResData,metric.SysData,metric.ResList,metric.ResClassList]=json2fg(filePath,fileName);
+            else
+                error('Only .mat data files are supported in the current version.')
+                exit
+            end
+            metric.('NumResources') = length(metric.ResList);
+            metric.('NumClasses') = length(metric.ResClassList);            
+            switch metric.Technology
+                case 'hadoop'
+                    dicefg_disp(2,'Running in technology-specific mode: Apache Hadoop dataset.')
+                    dicefg_disp(1,'Loading Apache Hadoop information.')
+                    % todo
+                case 'spark'
+                    dicefg_disp(2,'Running in technology-specific mode: Apache Spark dataset.')
+                    dicefg_disp(1,'Loading Apache Spark information.')
+                    % todo
+                case 'storm'
+                    dicefg_disp(2,'Running in technology-specific mode: Apache Storm dataset.')
+                    dicefg_disp(1,'Loading Apache Storm information.')
+                    % todo
+                case 'agnostic'
+                    dicefg_disp(2,'Running in technology-agnostic mode.')
+            end
+            dicefg_disp(2,sprintf('Dataset has %d resources and %d classes.',metric.NumResources,metric.NumClasses));
+            %% Data validation phase
+            [nRows,nColumns] = size(metric.ResData);
+            if nColumns ~= (metric.NumClasses+1)*metric.NumResources
+                error('Input files are inconsistent, not enough classes or resources in dataset.');
+                exit
+            end
+            if nRows<expectednRows
+                dicefg_disp(0,'Data does not include all rows. Adding empty rows.')
+                for i=nRows+1:expectednRows
+                    for j=1:nColumns
+                        metric.ResData{i,j}=[];
+                    end
+                end
+            end
+        catch err
+            err.message
+            error('Cannot load resource data file: %s.',metric.ResourceDataFile);
+            exit
+        end
+    %% Resource-level analysis
+    elseif strcmp(node.getNodeName,'resource')
+        metric = setMetricDefaults(metric);
+        metric.('Resource') = char(node.getAttribute('value'));
+        dicefg_disp(1,sprintf('Processing resource "%s".',metric.Resource));
+        metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));
+        subNode0 = node.getFirstChild;
+        while ~isempty(subNode0)
+            if strcmpi(subNode0.getNodeName, 'algorithm')
+                metric.('Method') = char(subNode0.getAttribute('value'));
+                metric.('Flags') = char(subNode0.getAttribute('flags'));
+                
+                if strfind(metric.Method,'est')==1
+                    dicefg_disp(2,'Switching to estimation method handler.')
+                    metric = dicefg_handler_est(metric, dicefg_disp);
+                end
+                
+                subNode1 = subNode0.getFirstChild;
+                while ~isempty(subNode1)
+                    if strcmpi(subNode1.getNodeName, 'output')
+                        subNode2 = subNode1.getFirstChild;
+                        while ~isempty(subNode2)
+                            % read all the custom parameters
+                            if strcmpi(subNode2.getNodeName, 'parameter')
+                                metric.(char(subNode2.getAttribute('type'))) = char(subNode2.getAttribute('value'));
+                            end
+                            subNode2 = subNode2.getNextSibling;
+                        end
+                        metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.Class,X),metric.ResClassList));
+                        
+                        if strfind(metric.Method,'fit')==1
+                            dicefg_disp(2,'Switching to fitting method handler.')
+                            metric = dicefg_handler_fit(metric, dicefg_disp);
+                        end
+                        
+                        dicefg_disp(2,'Applying confidence setting.');
+                        switch metric.Confidence
+                            case 'upper'
+                                metric.Result = metric.ConfInt(:,2);
+                            case 'lower'
+                                metric.Result = metric.ConfInt(:,1);
+                            case 'mean' % do nothing
+                        end
+                        
+                        %% Model updating phase
+                        dicefg_disp(2,'Switching to UML update handler.')
+                        dicefg_disp(2,sprintf('Saving metric "%s" at "%s"',metric.Class,metric.Resource));
+                        dicefg_handler_umlupdate(metric, dicefg_disp);
+                    end
+                    subNode1 = subNode1.getNextSibling;
+                end
+            end
+            subNode0 = subNode0.getNextSibling;
+        end
+    end
+    node = node.getNextSibling;
+end
+end
+
+function metric=setMetricDefaults(metric)
+metric.('Confidence')='mean';
+metric.('Flags')='';
+metric.('Class')='';
+metric.('Resource')='';
+metric.('Metric')='';
+metric.('UMLParam')='';
+metric.('UMLParamType')='';
+metric.('UMLInput')='';
+metric.('UMLOutput')='';
+end
+##### SOURCE END #####
+--></body></html>

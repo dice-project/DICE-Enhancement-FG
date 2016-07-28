@@ -18,9 +18,11 @@ switch metricName
         row = 8;
     case 'qlenAvg' 
         row = 9;
-    case 'mem' 
+    case 'jobId' 
         row = 10;
-    case 'memAvg' 
+    case 'mem' 
         row = 11;
+    case 'memAvg' 
+        row = 12;
 end
 end
