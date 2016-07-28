@@ -2,7 +2,7 @@
 <fg>   
     <configuration>
         <parameter type='Verbose' value='1' />
-	</configuration>
+    </configuration>
     <dataset>
         <parameter type='StartTime' value='0' />
         <parameter type='EndTime' value='1492581' />
@@ -14,8 +14,8 @@
         <parameter type='Technology' value='agnostic' />
         <parameter type='TechnologyInfo' value='' />
     </dataset>
-    <resource value='resource1'>
-        <algorithm value='est-res-ci' flags='numServers=1, warmUp=0'>
+    <analysis algorithm='est-res-qmle' flags='numServers=1, warmUp=0'>
+        <resource value='resource1'>
             <output>
                 <parameter type='Class' value='class1' />
                 <parameter type='Confidence' value='mean' />
@@ -40,54 +40,32 @@
                 <parameter type='UMLInput' value='./regression/validation/model.uml'/>
                 <parameter type='UMLOutput' value='./regression/validation/model.out'/>
             </output>
+        </resource>
+        <resource value='resource1'>
             <output>
-                <parameter type='Class' value='class1' />
+                <parameter type='Class' value='class2' />
                 <parameter type='Confidence' value='mean' />
                 <parameter type='UMLParam' value='$redT'/>
                 <parameter type='UMLParamType' value='hostDemand'/>
                 <parameter type='UMLInput' value='./regression/validation/model.uml'/>
                 <parameter type='UMLOutput' value='./regression/validation/model.out'/>
             </output>
-        </algorithm>
-        <algorithm value='est-res-ubr' flags='numServers=1, warmUp=0'>
             <output>
-                <parameter type='Class' value='class1' />
-                <parameter type='Confidence' value='mean' />
+                <parameter type='Class' value='class2' />
+                <parameter type='Confidence' value='lower' />
                 <parameter type='UMLParam' value='$redT'/>
                 <parameter type='UMLParamType' value='hostDemand'/>
                 <parameter type='UMLInput' value='./regression/validation/model.uml'/>
                 <parameter type='UMLOutput' value='./regression/validation/model.out'/>
             </output>
-        </algorithm>
-        <algorithm value='est-res-qmle' flags=''>
             <output>
-                <parameter type='Class' value='class1' />
-                <parameter type='Confidence' value='mean' />
+                <parameter type='Class' value='class2' />
+                <parameter type='Confidence' value='upper' />
                 <parameter type='UMLParam' value='$redT'/>
                 <parameter type='UMLParamType' value='hostDemand'/>
                 <parameter type='UMLInput' value='./regression/validation/model.uml'/>
                 <parameter type='UMLOutput' value='./regression/validation/model.out'/>
             </output>
-        </algorithm>
-        <algorithm value='est-res-extdelay' flags=''>
-            <output>
-                <parameter type='Class' value='class1' />
-                <parameter type='Confidence' value='mean' />
-                <parameter type='UMLParam' value='$redT'/>
-                <parameter type='UMLParamType' value='hostDemand'/>
-                <parameter type='UMLInput' value='./regression/validation/model.uml'/>
-                <parameter type='UMLOutput' value='./regression/validation/model.out'/>
-            </output>
-        </algorithm>
-        <algorithm value='est-res-maxpopulation' flags=''>
-            <output>
-                <parameter type='Class' value='class1' />
-                <parameter type='Confidence' value='mean' />
-                <parameter type='UMLParam' value='$redT'/>
-                <parameter type='UMLParamType' value='hostDemand'/>
-                <parameter type='UMLInput' value='./regression/validation/model.uml'/>
-                <parameter type='UMLOutput' value='./regression/validation/model.out'/>
-            </output>
-        </algorithm>
-    </resource>
+        </resource>
+    </analysis>
 </fg>

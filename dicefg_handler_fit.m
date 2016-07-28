@@ -1,28 +1,28 @@
 function metric=dicefg_handler_fit(metric,dicefg_disp)
 t_run = tic;
-dicefg_disp(2,sprintf('Direct fitting from measurement selected (%s).',metric.Method));
-supportedMethods = {'fit-erl','fit-exp','fit-gamma','fit-norm','fit-ph2','fit-map2'};
+dicefg_disp(2,sprintf('Direct fitting from measurement selected (%s).',metric.Algorithm));
+supportedAlgorithms = {'fit-erl','fit-exp','fit-gamma','fit-norm','fit-ph2','fit-map2'};
 try
-    metric.Method = validatestring(metric.Method,supportedMethods);
-    switch metric.Method
+    metric.Algorithm = validatestring(metric.Algorithm,supportedAlgorithms);
+    switch metric.Algorithm
         case 'fit-norm'
-            dicefg_disp(1,sprintf('Fitting method selected: normal distribution (%s)',metric.Method))
+            dicefg_disp(1,sprintf('Fitting method selected: normal distribution (%s)',metric.Algorithm))
             [muhat,sigmahat,muci,sigmaci] = normfit();
             metric.Result = [muhat; sigmahat];
             metric.ConfInt = [muci(1), muci(2); sigmaci(1), sigmaci(2)];
         case 'fit-gamma'
-            dicefg_disp(1,sprintf('Fitting method selected: gamma distribution (%s)',metric.Method))
+            dicefg_disp(1,sprintf('Fitting method selected: gamma distribution (%s)',metric.Algorithm))
             metric.Result = gamfit(get_data(metric,metric.ResIndex,metric.ClassIndex));
         case 'fit-exp'
-            dicefg_disp(1,sprintf('Fitting method selected: exponential distribution (%s)',metric.Method))
+            dicefg_disp(1,sprintf('Fitting method selected: exponential distribution (%s)',metric.Algorithm))
             metric.Result = expfit(get_data(metric,metric.ResIndex,metric.ClassIndex));
         case 'fit-erl'
-            dicefg_disp(1,sprintf('Fitting method selected: Erlang distribution (%s)',metric.Method))
+            dicefg_disp(1,sprintf('Fitting method selected: Erlang distribution (%s)',metric.Algorithm))
             % we fit an erlang by fitting a gamma and rounding
             % up the shape parameter later on
             metric.Result = gamfit(get_data(metric,metric.ResIndex,metric.ClassIndex));
         case 'fit-ph2'
-            dicefg_disp(1,sprintf('Fitting method selected: PH(2) distribution (%s)',metric.Method))
+            dicefg_disp(1,sprintf('Fitting method selected: PH(2) distribution (%s)',metric.Algorithm))
             trace = kpcfit_init(get_data(metric,metric.ResIndex,metric.ClassIndex));
             metric.Result = kpcfit_auto(trace,'OnlyAC',1,'NumStates',2,'MaxRunsAC',1);
             if map_isfeasible(metric.Result)
@@ -36,7 +36,7 @@ try
                 metric.Result = expfit(get_data(metric,metric.ResIndex,metric.ClassIndex));
             end
         case 'fit-map2'
-            dicefg_disp(1,sprintf('Fitting method selected: MAP(2) process (%s)',metric.Method))
+            dicefg_disp(1,sprintf('Fitting method selected: MAP(2) process (%s)',metric.Algorithm))
             trace = kpcfit_init(get_data(metric,metric.ResIndex,metric.ClassIndex));
             metric.Result = kpcfit_auto(trace,'OnlyAC',1,'NumStates',2,'MaxRunsAC',1);
             if ~map_isfeasible(metric.Result) || length(metric.Result{1})==1
@@ -45,7 +45,7 @@ try
             end
     end
 catch err
-    error('Unexpected error (%s): %s', metric.Method, err.message);
+    error('Unexpected error (%s): %s', metric.Algorithm, err.message);
     exit
 end
 dicefg_disp(1,sprintf('Fitting completed in %.6f seconds.',toc(t_run)));

@@ -57,7 +57,7 @@ while ~isempty(node)
                 exit
             end
             metric.('NumResources') = length(metric.ResList);
-            metric.('NumClasses') = length(metric.ResClassList);            
+            metric.('NumClasses') = length(metric.ResClassList);
             switch metric.Technology
                 case 'hadoop'
                     dicefg_disp(2,'Running in technology-specific mode: Apache Hadoop dataset.')
@@ -94,19 +94,19 @@ while ~isempty(node)
             error('Cannot load resource data file: %s.',metric.ResourceDataFile);
             exit
         end
-    %% Resource-level analysis
-    elseif strcmp(node.getNodeName,'resource')
-        metric = setMetricDefaults(metric);
-        metric.('Resource') = char(node.getAttribute('value'));
-        dicefg_disp(1,sprintf('Processing resource "%s".',metric.Resource));
-        metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));
+        %% Resource-level analysis
+    elseif strcmp(node.getNodeName,'analysis')
+        metric.('Algorithm') = char(node.getAttribute('algorithm'));
+        metric.('Flags') = char(node.getAttribute('flags'));
         subNode0 = node.getFirstChild;
         while ~isempty(subNode0)
-            if strcmpi(subNode0.getNodeName, 'algorithm')
-                metric.('Method') = char(subNode0.getAttribute('value'));
-                metric.('Flags') = char(subNode0.getAttribute('flags'));
+            if strcmpi(subNode0.getNodeName, 'resource')
+                metric = setMetricDefaults(metric);
+                metric.('Resource') = char(subNode0.getAttribute('value'));
+                dicefg_disp(1,sprintf('Processing resource "%s".',metric.Resource));
+                metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));
                 
-                if strfind(metric.Method,'est')==1
+                if strfind(metric.Algorithm,'est-')==1
                     dicefg_disp(2,'Switching to estimation method handler.')
                     metric = dicefg_handler_est(metric, dicefg_disp);
                 end
@@ -124,7 +124,7 @@ while ~isempty(node)
                         end
                         metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.Class,X),metric.ResClassList));
                         
-                        if strfind(metric.Method,'fit')==1
+                        if strfind(metric.Algorithm,'fit-')==1
                             dicefg_disp(2,'Switching to fitting method handler.')
                             metric = dicefg_handler_fit(metric, dicefg_disp);
                         end

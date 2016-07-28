@@ -8,14 +8,14 @@ try
     dicefg_disp(2,'Updating model');
     if strcmpi(metric.UMLParamType,'hostDemand')==1
         expression = sprintf('expr=%s',metric.UMLParam);
-        if strfind(metric.Method,'est')==1
+        if strfind(metric.Algorithm,'est')==1
             if length(metric.Result)>1
                 replace = sprintf('expr=exp(mean=%d)',metric.Result(metric.ClassIndex));
             else
                 replace = sprintf('expr=exp(mean=%d)',metric.Result);
             end
-        elseif strfind(metric.Method,'fit')==1
-            switch metric.Method
+        elseif strfind(metric.Algorithm,'fit')==1
+            switch metric.Algorithm
                 case 'fit-norm'
                     replace = sprintf('expr=norm(mean=%d, standDev=%d)',metric.Result(1),metric.Result(2));
                 case 'fit-exp'
