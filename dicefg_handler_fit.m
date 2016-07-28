@@ -4,10 +4,11 @@ dicefg_disp(2,sprintf('Direct fitting from measurement selected (%s).',metric.Al
 supportedAlgorithms = {'fit-erl','fit-exp','fit-gamma','fit-norm','fit-ph2','fit-map2'};
 try
     metric.Algorithm = validatestring(metric.Algorithm,supportedAlgorithms);
+    trace = get_data(metric,metric.Metric, metric.ResIndex, metric.ClassIndex);
     switch metric.Algorithm
         case 'fit-norm'
             dicefg_disp(1,sprintf('Fitting method selected: normal distribution (%s)',metric.Algorithm))
-            [muhat,sigmahat,muci,sigmaci] = normfit();
+            [muhat,sigmahat,muci,sigmaci] = normfit(trace);
             metric.Result = [muhat; sigmahat];
             metric.ConfInt = [muci(1), muci(2); sigmaci(1), sigmaci(2)];
         case 'fit-gamma'

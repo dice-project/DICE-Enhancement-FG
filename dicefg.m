@@ -1,290 +1,77 @@
 function dicefg(configFile)
 % DICEFG(configFile)
 % Run DICE-FG tool using the specified configuration XML file.
-
 version = '2.3.0';
-
-expectednRows = 11; % expected number of rows in data file
-
 xDoc = xmlread(configFile);
 rootNode = xDoc.getDocumentElement.getChildNodes; % get the <DICE-FG> root
-node = rootNode.getFirstChild;
-while ~isempty(node)
-    if strcmp(node.getNodeName, 'configuration')
-        subNode2 = node.getFirstChild;
-        while ~isempty(subNode2)
-            % read all the custom parameters
-            if strcmpi(subNode2.getNodeName, 'parameter')
-                configuration.(char(subNode2.getAttribute('type'))) = str2num(subNode2.getAttribute('value'));
-            end
-            subNode2 = subNode2.getNextSibling;
-        end
+
+Node = rootNode.getFirstChild;
+while ~isempty(Node)
+    if strcmp(Node.getNodeName, 'configuration')
+        [configuration] = config_parse_configuration(Node.getFirstChild);
         if configuration.Verbose == 0
             dicefg_disp = @dicefg_disp_silent;
-        elseif configuration.Verbose == 1
-            dicefg_disp = @dicefg_disp_normal;
         elseif configuration.Verbose == 2
             dicefg_disp = @dicefg_disp_debug;
-        else
-            error('Verbose level must be either 0 (silent), 1 (normal) or 2 (debug)');
-            exit
-        end
+        else % use normal in case of input errors
+            dicefg_disp = @dicefg_disp_normal;
+        end        
         dicefg_disp(1,sprintf('FG module - version %s - copyright 2012-2016 (c) - Imperial College London.',version));
-    elseif strcmp(node.getNodeName,'dataset')
-        subNode2 = node.getFirstChild;
-        while ~isempty(subNode2)
-            % read all the custom parameters
-            if strcmpi(subNode2.getNodeName, 'parameter')
-                metric.(char(subNode2.getAttribute('type'))) = char(subNode2.getAttribute('value'));
-            end
-            subNode2 = subNode2.getNextSibling;
+    elseif strcmp(Node.getNodeName,'dataset')
+        metric = config_parse_dataset(Node.getFirstChild,dicefg_disp);
+        metric = data_load(metric, dicefg_disp);
+        metric = data_validation(metric, dicefg_disp);
+    elseif strcmp(Node.getNodeName,'estimation') || strcmp(Node.getNodeName,'fitting')
+        metric = setDefaults(metric);
+        if strcmp(Node.getNodeName,'estimation')
+            metric = config_parse_estimation(metric,Node,dicefg_disp);
+        elseif strcmp(Node.getNodeName,'fitting')
+            metric = config_parse_fitting(metric,Node,dicefg_disp);
         end
-        try
-            %% Data loading phase
-            [filePath,fileName,fileExt] = fileparts(metric.ResourceDataFile);
-            if strcmpi(fileExt,'.mat')
-                dicefg_disp(1,'Loading resource data (mat format).');
-                loadedCell = load(metric.ResourceDataFile,'resdata'); metric.ResData=loadedCell.resdata;
-                loadedCell = load(metric.SystemDataFile,'sysdata'); metric.SysData=loadedCell.sysdata;
-                loadedCell = load(metric.ResourceClassList,'classes'); metric.ResClassList=loadedCell.resclasses;
-                loadedCell = load(metric.ResourceList,'resources'); metric.ResList=loadedCell.resources;
-            elseif strcmpi(fileExt,'.json')
-                dicefg_disp(1,'Loading resource data (JSON format).');
-                fileName = strrep(fileName,'-resdata','');
-                [metric.ResData,metric.SysData,metric.ResList,metric.ResClassList]=json2fg(filePath,fileName);
-            else
-                error('Only .mat data files are supported in the current version.')
-                exit
-            end
-            metric.('NumResources') = length(metric.ResList);
-            metric.('NumClasses') = length(metric.ResClassList);
-            switch metric.Technology
-                case 'hadoop'
-                    dicefg_disp(2,'Running in technology-specific mode: Apache Hadoop dataset.')
-                    dicefg_disp(1,'Loading Apache Hadoop information.')
-                    % todo
-                case 'spark'
-                    dicefg_disp(2,'Running in technology-specific mode: Apache Spark dataset.')
-                    dicefg_disp(1,'Loading Apache Spark information.')
-                    % todo
-                case 'storm'
-                    dicefg_disp(2,'Running in technology-specific mode: Apache Storm dataset.')
-                    dicefg_disp(1,'Loading Apache Storm information.')
-                    % todo
-                case 'agnostic'
-                    dicefg_disp(2,'Running in technology-agnostic mode.')
-            end
-            dicefg_disp(2,sprintf('Dataset has %d resources and %d classes.',metric.NumResources,metric.NumClasses));
-            %% Data validation phase
-            [nRows,nColumns] = size(metric.ResData);
-            if nColumns ~= (metric.NumClasses+1)*metric.NumResources
-                error('Input files are inconsistent, not enough classes or resources in dataset.');
-                exit
-            end
-            if nRows<expectednRows
-                dicefg_disp(0,'Data does not include all rows. Adding empty rows.')
-                for i=nRows+1:expectednRows
-                    for j=1:nColumns
-                        metric.ResData{i,j}=[];
-                    end
-                end
-            end
-        catch err
-            err.message
-            error('Cannot load resource data file: %s.',metric.ResourceDataFile);
-            exit
-        end
-        %% Resource-level analysis
-    elseif strcmp(node.getNodeName,'estimation')
-        metric = setMetricDefaults(metric);
-        metric.('Algorithm') = char(node.getAttribute('type'));
-        metric.('Flags') = char(node.getAttribute('flags'));
-        subNode0 = node.getFirstChild;
+        subNode0 = Node.getFirstChild;
         while ~isempty(subNode0)
-            if strcmpi(subNode0.getNodeName, 'resource')
-                metric.('Resource') = char(subNode0.getAttribute('value'));
-                resFlags = char(subNode0.getAttribute('flags'));
-                if length(metric.Flags) > 0 && length(resFlags) > 0
-                    metric.('Flags') = sprintf('%s, %s',metric.Flags,resFlags);
-                else % still needs to create the field even if empty
-                    metric.('Flags') = char(subNode0.getAttribute('flags'));
-                end
-                dicefg_disp(1,sprintf('Processing resource "%s".',metric.Resource));
-                metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));
-                if strfind(metric.Algorithm,'est-')==1
-                    dicefg_disp(2,'Switching to resource-level estimation handler.')
+            if strcmp(Node.getNodeName,'estimation')
+                if strcmpi(subNode0.getNodeName, 'resource')
+                    metric = config_parse_resource(metric,subNode0,dicefg_disp);
                     metric = dicefg_handler_res_est(metric, dicefg_disp);
-                end
-                
-                subNode1 = subNode0.getFirstChild;
-                while ~isempty(subNode1)
-                    if strcmpi(subNode1.getNodeName, 'output')
-                        metric.('Handler') = char(subNode1.getAttribute('handler'));
-                        subNode2 = subNode1.getFirstChild;
-                        while ~isempty(subNode2)
-                            % read all the custom parameters
-                            if strcmpi(subNode2.getNodeName, 'parameter')
-                                metric.(char(subNode2.getAttribute('type'))) = char(subNode2.getAttribute('value'));
-                            end
-                            subNode2 = subNode2.getNextSibling;
-                        end
-                        metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.Class,X),metric.ResClassList));
-                        
-                        %% Model updating phase
-                        model_actuator(metric, dicefg_disp);
-                    end
-                    subNode1 = subNode1.getNextSibling;
-                end
-            elseif strcmpi(subNode0.getNodeName, 'system')
-                metric.('System') = char(subNode0.getAttribute('value'));
-                resFlags = char(subNode0.getAttribute('flags'));
-                if length(metric.Flags) > 0 && length(resFlags) > 0
-                    metric.('Flags') = sprintf('%s, %s',metric.Flags,resFlags);
-                else % still needs to create the field even if empty
-                    metric.('Flags') = char(subNode0.getAttribute('flags'));
-                end
-                dicefg_disp(1,sprintf('Processing system "%s".',metric.System));
-                metric.('SysIndex') = find(cellfun(@(X)strcmpi(metric.System,X),metric.ResList));
-                if strfind(metric.Algorithm,'est-')==1
-                    dicefg_disp(2,'Switching to system-level estimation handler.')
-                    metric = dicefg_handler_res_est(metric, dicefg_disp);
-                end
-                
-                subNode1 = subNode0.getFirstChild;
-                while ~isempty(subNode1)
-                    if strcmpi(subNode1.getNodeName, 'output')
-                        metric.('Handler') = char(subNode1.getAttribute('handler'));
-                        subNode2 = subNode1.getFirstChild;
-                        while ~isempty(subNode2)
-                            % read all the custom parameters
-                            if strcmpi(subNode2.getNodeName, 'parameter')
-                                metric.(char(subNode2.getAttribute('type'))) = char(subNode2.getAttribute('value'));
-                            end
-                            subNode2 = subNode2.getNextSibling;
-                        end
-                        metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.Class,X),metric.ResClassList));
-                        
-                        if strfind(metric.Algorithm,'fit-')==1
-                            dicefg_disp(2,'Switching to resource-level fitting handler.')
-                            metric = dicefg_handler_fit(metric, dicefg_disp);
-                        end
-                    end
-                    subNode1 = subNode1.getNextSibling;
+                elseif strcmpi(subNode0.getNodeName, 'system')
+                    metric = config_parse_system(metric,Node,dicefg_disp);
+                    metric = dicefg_handler_sys_est(metric, dicefg_disp);
                 end
             end
-            subNode0 = subNode0.getNextSibling;
-        end
-    elseif strcmp(node.getNodeName,'fitting')
-        metric = setMetricDefaults(metric);
-        metric.('Algorithm') = char(node.getAttribute('type'));
-        metric.('Flags') = char(node.getAttribute('flags'));
-        subNode0 = node.getFirstChild;
-        while ~isempty(subNode0)
-            if strcmpi(subNode0.getNodeName, 'resource')
-                metric.('Resource') = char(subNode0.getAttribute('value'));
-                resFlags = char(subNode0.getAttribute('flags'));
-                if length(metric.Flags) > 0 && length(resFlags) > 0
-                    metric.('Flags') = sprintf('%s, %s',metric.Flags,resFlags);
-                else % still needs to create the field even if empty
-                    metric.('Flags') = char(subNode0.getAttribute('flags'));
-                end
-                dicefg_disp(1,sprintf('Processing resource "%s".',metric.Resource));
-                metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));
-                
-                subNode1 = subNode0.getFirstChild;
-                while ~isempty(subNode1)
-                    if strcmpi(subNode1.getNodeName, 'output')
-                        metric.('Handler') = char(subNode1.getAttribute('handler'));
-                        subNode2 = subNode1.getFirstChild;
-                        while ~isempty(subNode2)
-                            % read all the custom parameters
-                            if strcmpi(subNode2.getNodeName, 'parameter')
-                                metric.(char(subNode2.getAttribute('type'))) = char(subNode2.getAttribute('value'));
+            subNode1 = subNode0.getFirstChild;
+            while ~isempty(subNode1)
+                if strcmpi(subNode1.getNodeName, 'output')
+                    metric = config_parse_output(metric,subNode1,dicefg_disp);
+                    subNode2 = subNode1.getFirstChild;
+                    while ~isempty(subNode2)
+                        if strcmpi(subNode2.getNodeName, 'metric')
+                            metric = config_parse_metric(metric,subNode2,dicefg_disp);
+                            if strcmp(Node.getNodeName,'fitting')
+                                metric = dicefg_handler_fit(metric, dicefg_disp);
                             end
-                            subNode2 = subNode2.getNextSibling;
+                            dicefg_actuator(metric, dicefg_disp);
                         end
-                        metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.Class,X),metric.ResClassList));
-                        
-                        if strfind(metric.Algorithm,'fit-')==1
-                            dicefg_disp(2,'Switching to resource-level fitting handler.')
-                            metric = dicefg_handler_fit(metric, dicefg_disp);
-                        end
-                        
-                        %% Model updating phase
-                        model_actuator(metric, dicefg_disp);
+                        subNode2 = subNode2.getNextSibling;
                     end
-                    subNode1 = subNode1.getNextSibling;
                 end
-            elseif strcmpi(subNode0.getNodeName, 'system')
-                metric.('System') = char(subNode0.getAttribute('value'));
-                resFlags = char(subNode0.getAttribute('flags'));
-                if length(metric.Flags) > 0 && length(resFlags) > 0
-                    metric.('Flags') = sprintf('%s, %s',metric.Flags,resFlags);
-                else % still needs to create the field even if empty
-                    metric.('Flags') = char(subNode0.getAttribute('flags'));
-                end
-                dicefg_disp(1,sprintf('Processing system "%s".',metric.System));
-                metric.('SysIndex') = find(cellfun(@(X)strcmpi(metric.System,X),metric.ResList));
-                if strfind(metric.Algorithm,'est-')==1
-                    dicefg_disp(2,'Switching to system-level estimation handler.')
-                    metric = dicefg_handler_res_est(metric, dicefg_disp);
-                end
-                
-                subNode1 = subNode0.getFirstChild;
-                while ~isempty(subNode1)
-                    if strcmpi(subNode1.getNodeName, 'output')
-                        metric.('Handler') = char(subNode1.getAttribute('handler'));
-                        subNode2 = subNode1.getFirstChild;
-                        while ~isempty(subNode2)
-                            % read all the custom parameters
-                            if strcmpi(subNode2.getNodeName, 'parameter')
-                                metric.(char(subNode2.getAttribute('type'))) = char(subNode2.getAttribute('value'));
-                            end
-                            subNode2 = subNode2.getNextSibling;
-                        end
-                        metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.Class,X),metric.ResClassList));
-                        
-                        if strfind(metric.Algorithm,'fit-')==1
-                            dicefg_disp(2,'Switching to resource-level fitting handler.')
-                            metric = dicefg_handler_fit(metric, dicefg_disp);
-                        end
-                        
-                        %% Model updating phase
-                        switch metric.Handler
-                            case 'uml-marte'
-                                dicefg_disp(2,'Switching to UML MARTE update handler.')
-                                dicefg_disp(2,sprintf('Saving metric "%s" at "%s"',metric.Class,metric.Resource));
-                                dicefg_handler_umlmarte(metric, dicefg_disp);
-                        end
-                    end
-                    subNode1 = subNode1.getNextSibling;
-                end
+                subNode1 = subNode1.getNextSibling;
             end
             subNode0 = subNode0.getNextSibling;
         end
     end
-    node = node.getNextSibling;
+    Node = Node.getNextSibling;
 end
 end
 
-function metric=setMetricDefaults(metric)
+function metric = setDefaults(metric)
 metric.('Confidence')='mean';
 metric.('Flags')='';
 metric.('Class')='';
 metric.('Resource')='';
 metric.('Metric')='';
-metric.('UMLParam')='';
-metric.('UMLParamType')='';
-metric.('UMLInput')='';
-metric.('UMLOutput')='';
-end
-
-function model_actuator(metric, dicefg_disp)
-%% Model updating phase
-switch metric.Handler
-    case 'uml-marte'
-        dicefg_disp(2,'Switching to UML MARTE update handler.')
-        dicefg_disp(2,sprintf('Saving metric "%s" at "%s"',metric.Class,metric.Resource));
-        dicefg_handler_umlmarte(metric, dicefg_disp);
-end
+metric.('Param')='';
+metric.('ParamType')='';
+metric.('InputFile')='';
+metric.('OutputFile')='';
 end
