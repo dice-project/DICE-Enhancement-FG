@@ -107,8 +107,8 @@ while ~isempty(node)
                 metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));
                 
                 if strfind(metric.Algorithm,'est-')==1
-                    dicefg_disp(2,'Switching to estimation method handler.')
-                    metric = dicefg_handler_est(metric, dicefg_disp);
+                    dicefg_disp(2,'Switching to resource-level estimation method handler.')
+                    metric = dicefg_handler_resest(metric, dicefg_disp);
                 end
                 
                 subNode1 = subNode0.getFirstChild;
