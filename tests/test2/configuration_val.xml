@@ -11,19 +11,18 @@
         <file type='SystemDataFile' path='./tests/test2/test-sysdata.json' />
         <file type='SystemClassList' path='./tests/test2/test-sysclasses.json' />
     </dataset>
-    <fitting type='fit-norm' flags=''>
+    <fitting type='fit-map2' flags=''>
         <resource name='resource1' flags=''>
             <output handler='uml-marte' path='./tests/test2/model.uml'>
-                <metric name='qlen' class='class1' confidence='mean' param='$redT' type='hostDemand' />
+                <metric name='qlen' class='class1' confidence='mean' param='$RT' type='hostDemand' />
             </output>
         </resource>
     </fitting>
     <estimation type='est-qmle' flags='warmUp=0'>
         <resource name='resource1' flags='numServers=1'>
             <output handler='uml-marte' path='./tests/test2/model.uml'>
-                <metric class='class1' confidence='mean' param='$redT' type='hostDemand' />
-                <metric class='class1' confidence='upper' param='$RT' type='hostDemand' />
-                <metric class='class1' confidence='lower' param='$mapT' type='hostDemand' />
+                <metric class='class1' confidence='mean' param='$mapT' type='hostDemand' />
+                <metric class='class1' confidence='upper' param='$redT' type='hostDemand' />
             </output>
         </resource>
     </estimation>

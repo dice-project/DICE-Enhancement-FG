@@ -4,7 +4,7 @@ function dicefg(configFile)
 version = '2.3.0';
 xDoc = xmlread(configFile);
 rootNode = xDoc.getDocumentElement.getChildNodes; % get the <DICE-FG> root
-
+warning off;
 Node = rootNode.getFirstChild;
 while ~isempty(Node)
     if strcmp(Node.getNodeName, 'configuration')
