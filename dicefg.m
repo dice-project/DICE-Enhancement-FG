@@ -1,7 +1,7 @@
 function dicefg(configFile)
 % DICEFG(configFile)
 % Run DICE-FG tool using the specified configuration XML file.
-version = '2.3.0';
+version = '2.0.0';
 xDoc = xmlread(configFile);
 rootNode = xDoc.getDocumentElement.getChildNodes; % get the <DICE-FG> root
 warning off;
