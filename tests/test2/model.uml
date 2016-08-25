@@ -10,7 +10,7 @@
 {contextParams=[$nC1,$nC2,$nC3,$th1,$th2,$th3,$nM1,$nM2,$nM3,$nR1,$nR2,$nR3,$mapT,$redT,$nP1,$nP2,$nP3,out$RT]}
 &lt;&lt;HadoopScenario>>
 {jobSchedule=capacity;
-respT=(expr=exp(mean=9.849955e-01),statQ=mean,source=calc)}</body>
+respT=(expr=$RT,statQ=mean,source=calc)}</body>
       </ownedComment>
       <ownedComment xmi:type="uml:Comment" xmi:id="_ol2_0DliEeaE4deiM0Jlvg" annotatedElement="_p15FUDlXEeaE4deiM0Jlvg">
         <body>{hadoopPopulation=[$nC1,$nC2,$nC3];
@@ -22,13 +22,13 @@ respT=(expr=exp(mean=9.849955e-01),statQ=mean,source=calc)}</body>
       <group xmi:type="uml:ActivityPartition" xmi:id="_VYd2gDllEeaE4deiM0Jlvg" name="Reducer" node="_vVW-sDlXEeaE4deiM0Jlvg" represents="_EPQdYDlmEeaE4deiM0Jlvg">
         <ownedComment xmi:type="uml:Comment" xmi:id="_XVttsDliEeaE4deiM0Jlvg" annotatedElement="_vVW-sDlXEeaE4deiM0Jlvg">
           <body>{nTasks=[$nR1,$nR2,$nR3];
- hostDemand=[(expr=norm(mean=6.000000e-01, standDev=6.039284e-01),unit=ms,statQ=mean,source=est)]}</body>
+ hostDemand=[(expr=$redT,unit=ms,statQ=mean,source=est)]}</body>
         </ownedComment>
       </group>
       <group xmi:type="uml:ActivityPartition" xmi:id="_qYQqMDllEeaE4deiM0Jlvg" name="Mapper" node="_uZmhEDlXEeaE4deiM0Jlvg" represents="_DTxskDlmEeaE4deiM0Jlvg">
         <ownedComment xmi:type="uml:Comment" xmi:id="_EWHQIDliEeaE4deiM0Jlvg" annotatedElement="_uZmhEDlXEeaE4deiM0Jlvg">
           <body>{nTasks=[$nM1,$nM2,$nM3};
- hostDemand=[(expr=exp(mean=6.826660e-01),unit=ms,statQ=mean,source=est)]}</body>
+ hostDemand=[(expr=$mapT,unit=ms,statQ=mean,source=est)]}</body>
         </ownedComment>
       </group>
       <node xmi:type="uml:InitialNode" xmi:id="_p15FUDlXEeaE4deiM0Jlvg" name="start" outgoing="_zfomwDlXEeaE4deiM0Jlvg"/>
@@ -150,10 +150,10 @@ respT=(expr=exp(mean=9.849955e-01),statQ=mean,source=calc)}</body>
     </profileApplication>
   </uml:Model>
   <Hadoop:HadoopScenario xmi:id="_gsi7MDlXEeaE4deiM0Jlvg" base_NamedElement="_WuYo8DlXEeaE4deiM0Jlvg" base_Behavior="_WuYo8DlXEeaE4deiM0Jlvg">
-    <respT>(expr=exp(mean=9.849955e-01),statQ=mean,source=calc)</respT>
+    <respT>(expr=$RT,statQ=mean,source=calc)</respT>
   </Hadoop:HadoopScenario>
   <Hadoop:HadoopOperation xmi:id="_-VVlADlXEeaE4deiM0Jlvg" base_NamedElement="_uZmhEDlXEeaE4deiM0Jlvg" base_Action="_uZmhEDlXEeaE4deiM0Jlvg" blockT="">
-    <hostDemand>(expr=exp(mean=6.826660e-01),unit=ms,statQ=mean,source=est)</hostDemand>
+    <hostDemand>(expr=$mapT,unit=ms,statQ=mean,source=est)</hostDemand>
     <nTasks>$nM1</nTasks>
     <nTasks>$nM2</nTasks>
     <nTasks>$nM3</nTasks>
@@ -167,7 +167,7 @@ respT=(expr=exp(mean=9.849955e-01),statQ=mean,source=calc)}</body>
     <hadoopExtDelay>$th3</hadoopExtDelay>
   </Hadoop:HadoopWorkloadEvent>
   <Hadoop:HadoopOperation xmi:id="_-5CVsDlcEeaE4deiM0Jlvg" base_NamedElement="_vVW-sDlXEeaE4deiM0Jlvg" base_Action="_vVW-sDlXEeaE4deiM0Jlvg">
-    <hostDemand>(expr=norm(mean=6.000000e-01, standDev=6.039284e-01),unit=ms,statQ=mean,source=est)</hostDemand>
+    <hostDemand>(expr=$redT,unit=ms,statQ=mean,source=est)</hostDemand>
     <nTasks>$nR1</nTasks>
     <nTasks>$nR2</nTasks>
     <nTasks>$nR3</nTasks>
