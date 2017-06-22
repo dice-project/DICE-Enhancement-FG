@@ -15,7 +15,7 @@
         <parameter type='TechnologyInfo' value='' />
     </dataset>
     <resource value='resource1'>
-        <algorithm value='est-ci' flags='numServers=1, warmUp=0' >
+        <algorithm value='est-res-ci' flags='numServers=1, warmUp=0' >
             <output>
                 <parameter type='Class' value='class1' />
                 <parameter type='Confidence' value='mean' />
