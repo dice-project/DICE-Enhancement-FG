@@ -5,24 +5,25 @@
     </configuration>
     <dataset>
         <period start='0' end='1492581' />        
-        <file type='ResourceList' path='./tests/test2/test-resources.json' />
-        <file type='ResourceDataFile' path='./tests/test2/test-resdata.json' />
-        <file type='ResourceClassList' path='./tests/test2/test-resclasses.json' />
-        <file type='SystemDataFile' path='./tests/test2/test-sysdata.json' />
-        <file type='SystemClassList' path='./tests/test2/test-sysclasses.json' />
+        <file type='ResourceList' path='test-resources.json' />
+        <file type='ResourceDataFile' path='test-resdata.json' />
+        <file type='ResourceClassList' path='test-resclasses.json' />
+        <file type='SystemDataFile' path='test-sysdata.json' />
+        <file type='SystemClassList' path='test-sysclasses.json' />
     </dataset>
-    <fitting type='fit-map2' flags=''>
+    <fitting type='fit-norm' flags=''>
         <resource name='resource1' flags=''>
-            <output handler='uml-marte' path='./tests/test2/model.uml'>
-                <metric name='qlen' class='class1' confidence='mean' param='$RT' type='hostDemand' />
+            <output handler='uml-marte' path='model.uml'>
+                <metric name='qlen' class='class1' confidence='mean' param='$redT' type='hostDemand' />
             </output>
         </resource>
     </fitting>
     <estimation type='est-qmle' flags='warmUp=0'>
         <resource name='resource1' flags='numServers=1'>
-            <output handler='uml-marte' path='./tests/test2/model.uml'>
-                <metric class='class1' confidence='mean' param='$mapT' type='hostDemand' />
-                <metric class='class1' confidence='upper' param='$redT' type='hostDemand' />
+            <output handler='uml-marte' path='model.uml'>
+                <metric class='class1' confidence='mean' param='$redT' type='hostDemand' />
+                <metric class='class1' confidence='upper' param='$RT' type='hostDemand' />
+                <metric class='class1' confidence='lower' param='$mapT' type='hostDemand' />
             </output>
         </resource>
     </estimation>

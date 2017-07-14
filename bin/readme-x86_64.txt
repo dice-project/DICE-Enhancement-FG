@@ -26,16 +26,20 @@ Package and Distribute in the MATLAB Compiler documentation
 in the MathWorks Documentation Center.    
 
 
+
+
+
 2. Files to Deploy and Package
 
 Files to package for Standalone 
 ================================
+
 -dicefg 
 -run_dicefg.sh (shell script for temporarily setting environment variables and executing 
-                the application)
-   -to run the shell script, type
-   
-       ./run_dicefg.sh <mcr_directory> <argument_list>
+the application)
+
+-to run the shell script, type
+ ./run_dicefg.sh <mcr_directory> <argument_list>
        
     at Linux or Mac command prompt. <mcr_directory> is the directory 
     where version 9.0.1 of the MATLAB Runtime is installed or the directory where 
@@ -57,7 +61,10 @@ Files to package for Standalone
     the "Runtime downloaded from web" link in the Deployment Tool
 -This readme file 
 
-3. Definitions
+
+
+
+3. Definitions 
 
 For information on deployment terminology, go to 
 http://www.mathworks.com/help. Select MATLAB Compiler >   
