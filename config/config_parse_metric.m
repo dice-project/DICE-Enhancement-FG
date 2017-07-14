@@ -4,5 +4,5 @@ metric.('Class') = char(Node.getAttribute('class'));
 metric.('Confidence') = char(Node.getAttribute('confidence'));
 metric.('Param') = char(Node.getAttribute('param'));
 metric.('ParamType') = char(Node.getAttribute('type'));
-metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.Class,X),metric.ResClassList));
+metric.('ClassIndex') = find(cellfun(@(X)strcmpi(metric.Class,X),{metric.ResClassList}));
 end

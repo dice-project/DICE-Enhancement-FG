@@ -7,5 +7,5 @@ else % still needs to create the field even if empty
     metric.('Flags') = char(Node.getAttribute('flags'));
 end
 dicefg_disp(1,sprintf('Processing resource "%s".',metric.Resource));
-metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),metric.ResList));
+metric.('ResIndex') = find(cellfun(@(X)strcmpi(metric.Resource,X),{metric.ResList}));
 end
