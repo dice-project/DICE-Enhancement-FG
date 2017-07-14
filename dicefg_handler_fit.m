@@ -1,7 +1,7 @@
 function metric=dicefg_handler_fit(metric,dicefg_disp)
 t_run = tic;
 dicefg_disp(2,sprintf('Direct fitting from measurement selected (%s).',metric.Algorithm));
-supportedAlgorithms = {'fit-erl','fit-exp','fit-gamma','fit-norm','fit-ph2','fit-map2'};
+supportedAlgorithms = {'fit-mean','fit-erl','fit-exp','fit-gamma','fit-norm','fit-ph2','fit-map2'};
 try
     metric.Algorithm = validatestring(metric.Algorithm,supportedAlgorithms);
     trace = get_data(metric,metric.Metric, metric.ResIndex, metric.ClassIndex);
@@ -14,6 +14,9 @@ try
         case 'fit-gamma'
             dicefg_disp(1,sprintf('Fitting gamma distribution (%s).',metric.Algorithm))
             metric.Result = gamfit(get_data(metric,metric.Metric,metric.ResIndex,metric.ClassIndex));
+        case 'fit-mean'
+            dicefg_disp(1,sprintf('Fitting mean only (%s).',metric.Algorithm))
+            metric.Result = mean(get_data(metric,metric.Metric,metric.ResIndex,metric.ClassIndex));
         case 'fit-exp'
             dicefg_disp(1,sprintf('Fitting exponential distribution (%s).',metric.Algorithm))
             metric.Result = expfit(get_data(metric,metric.Metric,metric.ResIndex,metric.ClassIndex));

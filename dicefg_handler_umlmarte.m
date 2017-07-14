@@ -18,40 +18,42 @@ try
         expression = sprintf('expr=%s',metric.Param);
         if strfind(metric.Algorithm,'est')==1
             if length(metric.Result)>1
-                replace = sprintf('expr=exp(mean=%d)',metric.Result(metric.ClassIndex));
+                replace = sprintf('expr=exp(mean=%.3f)',metric.Result(metric.ClassIndex));
             else
-                replace = sprintf('expr=exp(mean=%d)',metric.Result);
+                replace = sprintf('expr=exp(mean=%.3f)',metric.Result);
             end
         elseif strfind(metric.Algorithm,'fit')==1
             switch metric.Algorithm
+                case 'fit-mean'
+                    replace = sprintf('expr=%.2f',metric.Result);
                 case 'fit-norm'
-                    replace = sprintf('expr=norm(mean=%d, standDev=%d)',metric.Result(1),metric.Result(2));
+                    replace = sprintf('expr=norm(mean=%.3f, standDev=%.3f)',metric.Result(1),metric.Result(2));
                 case 'fit-exp'
-                    replace = sprintf('expr=exp(mean=%d)',metric.Result);
+                    replace = sprintf('expr=exp(mean=%.3f)',metric.Result);
                 case 'fit-gamma'
                     shape = metric.Result(1);
                     scale = metric.Result(2);
                     [m] = gamstat(shape,scale);
-                    replace = sprintf('expr=gamma(k=%d,mean=%d)',shape,m);
+                    replace = sprintf('expr=gamma(k=%.3f,mean=%.3f)',shape,m);
                 case 'fit-erl'
                     shape = metric.Result(1);
                     scale = metric.Result(2);
                     [m] = gamstat(shape,scale);
-                    replace = sprintf('expr=erl(k=%d,mean=%d)',round(shape),m);
+                    replace = sprintf('expr=erl(k=%.3f,mean=%.3f)',round(shape),m);
                 case 'fit-ph2'
                     MAP=metric.Result;
                     [alpha,T]=map2ph(MAP);
-                    replace = sprintf('expr=ph2(T_11=%d,T_12=%d,T_21=%d,T_22=%d,alpha1=%d,alpha2=%d)',T(1,1),T(1,2),T(2,1),T(2,2),alpha(1),alpha(2));
+                    replace = sprintf('expr=ph2(T_11=%.3f,T_12=%.3f,T_21=%.3f,T_22=%.3f,alpha1=%.3f,alpha2=%.3f)',T(1,1),T(1,2),T(2,1),T(2,2),alpha(1),alpha(2));
                 case 'fit-map2'
                     MAP=metric.Result;
-                    replace = sprintf('expr=map2(D0_11=%d,D0_12=%d,D0_21=%d,D0_22=%d,D1_11=%d,D1_12=%d,D1_21=%d,D1_22=%d)',MAP{1}(1,1),MAP{1}(1,2),MAP{1}(2,1),MAP{1}(2,2),MAP{2}(1,1),MAP{2}(1,2),MAP{2}(2,1),MAP{2}(2,2));
+                    replace = sprintf('expr=map2(D0_11=%.3f,D0_12=%.3f,D0_21=%.3f,D0_22=%.3f,D1_11=%.3f,D1_12=%.3f,D1_21=%.3f,D1_22=%.3f)',MAP{1}(1,1),MAP{1}(1,2),MAP{1}(2,1),MAP{1}(2,2),MAP{2}(1,1),MAP{2}(1,2),MAP{2}(2,1),MAP{2}(2,2));
             end
         end
         f = strrep(f,expression,replace);
         dicefg_disp(1,sprintf('Writing UML MARTE hostDemand (contextParam: %s): %s',metric.Param,replace));
-        dicefg_disp(2,sprintf('Expression: %s\nReplaced: %s',expression,replace));
+        dicefg_disp(1,sprintf('Expression: %s\nReplaced: %s',expression,replace));
     end
-    dicefg_disp(2,'Writing output UML MARTE model');
+    dicefg_disp(1,sprintf('Writing output UML MARTE model: %s',metric.OutputFile));
     fid  = fopen(metric.OutputFile,'w');
     fprintf(fid,'%s',f);
     fclose(fid);
