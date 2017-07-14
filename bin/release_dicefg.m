@@ -5,5 +5,6 @@ if isunix
 elseif ispc
     system('zip .\bin\dicefg-windows.zip bin\dicefg.exe')    
 end
-commit_dicefg
 cd bin/
+commit_dicefg
+
