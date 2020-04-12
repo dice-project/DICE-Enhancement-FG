@@ -5,6 +5,10 @@ function demEst = est_res_ubr(metric, flags, dicefg_disp)
 % All rights reserved.
 % This code is released under the 3-Clause BSD License.
 
+if nargin < 3
+    dicefg_disp = @dicefg_disp_silent;
+end
+
 nServers = flags.numServers;
 cpuUtil = get_data(metric,'util', metric.ResIndex, 0);
 
